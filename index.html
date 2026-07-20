@@ -3,168 +3,451 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peyser's Studio 正在施工</title>
+    <title>Peyser.cn</title>
     <style>
-        /* 炫酷动画背景：流光色彩渐变 */
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: all 0.3s ease; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        /* ==========================================================================
+           1. 基础苹果风样式与极致字体微调
+           ========================================================================== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "PingFang SC", "Helvetica Neue", Helvetica, "Microsoft YaHei", Arial, sans-serif;
+            background: #0f1016; 
+            min-height: 100vh;
+            color: #f5f5f7;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.011em; /* 苹果标志性的微紧字距，极具杂志感 */
+        }
+
+        /* ==========================================================================
+           2. 启动欢迎页面：流光渐变（进入后自动隐去）
+           ========================================================================== */
+        #welcome-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            color: #fff; 
-            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+        #welcome-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.1) translateY(-10px);
+            filter: blur(15px);
+        }
+        .welcome-title {
+            font-family: "SF Pro Display", "PingFang SC", sans-serif;
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            animation: textPulse 2s ease-in-out infinite alternate;
+        }
+        @keyframes textPulse {
+            0% { transform: scale(0.98); opacity: 0.9; }
+            100% { transform: scale(1.02); opacity: 1; }
+        }
 
-        /* 顶部语言切换器样式 */
-        .lang-switcher {
-            position: absolute;
-            top: 30px;
-            right: 30px;
+        /* ==========================================================================
+           3. 苹果风高级果冻玻璃拟态（Glassmorphism）
+           ========================================================================== */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(30px);           
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 20px;                   
+            border: 1px solid rgba(255, 255, 255, 0.12); 
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.3); 
+        }
+
+        /* 主容器布局 */
+        .main-container {
+            max-width: 1000px;
+            margin: 50px auto 30px auto;
+            padding: 0 24px;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* 顶部 Header */
+        .site-header {
+            padding: 30px 40px;
+            margin-bottom: 35px;
             display: flex;
-            gap: 10px;
-            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
         }
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        .lang-btn:hover { background: rgba(255, 255, 255, 0.35); }
-        .lang-btn.active {
-            background: #fff;
-            color: #333;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        .site-info h1 { 
+            font-family: "SF Pro Display", "PingFang SC", sans-serif;
+            font-size: 2rem; 
+            font-weight: 700; 
+            letter-spacing: -0.02em;
+            color: #ffffff;
         }
 
-        /* 高级感毛玻璃容器 */
-        .container { 
-            max-width: 650px; 
-            padding: 50px 40px; 
-            background: rgba(255, 255, 255, 0.08); 
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: 24px; 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            animation: fadeIn 1.2s ease-out;
+        /* 时钟样式 */
+        .clocks-container {
+            display: flex;
+            gap: 16px;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        .clock-card {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 14px 20px;
+            border-radius: 14px;
+            text-align: center;
+            min-width: 145px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .clock-label { font-size: 0.8rem; color: #86868b; margin-bottom: 4px; font-weight: 500; }
+        .clock-time { 
+            font-family: "SF Pro Text", -apple-system, monospace; 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            color: #0071e3; 
+            font-variant-numeric: tabular-nums; /* 等宽数字，秒针跳动网页不抖 */
+            letter-spacing: 0.03em;
+        }
+
+        /* 大类导航栏 */
+        .category-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-left: 8px;
+        }
+        .nav-tab {
+            padding: 14px 24px;
+            background: transparent;
+            border: none;
+            color: #86868b; 
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            font-weight: 600;
+        }
+        .nav-tab:hover { color: #f5f5f7; }
+        .nav-tab.active { color: #ffffff; }
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; width: 100%; height: 2px;
+            background: #ffffff;
+            border-radius: 2px;
+        }
+
+        /* 主页面内容容器 */
+        .page-content {
+            padding: 40px;
+            min-height: 480px;
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: appleFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+
+        /* ==========================================================================
+           4. 旅游板块：中英双语极简时间线 + 次数气泡框
+           ========================================================================== */
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+            padding-left: 32px;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -39px; top: 6px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px #0f1016, 0 0 12px rgba(255,255,255,0.4);
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .timeline-date {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #86868b;
+        }
+        /* 次数标记小方框 */
+        .visit-badge {
+            font-size: 0.75rem;
+            background: rgba(0, 113, 227, 0.15);
+            color: #0071e3;
+            border: 1px solid rgba(0, 113, 227, 0.3);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .timeline-zh {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+            font-family: "SF Pro Display", "PingFang SC", sans-serif;
+            letter-spacing: -0.01em;
+        }
+        .timeline-en {
+            font-size: 0.95rem;
+            color: #86868b;
+            font-weight: 500;
+            font-family: "SF Pro Text", sans-serif;
+        }
+
+        /* ==========================================================================
+           5. 播客与联系我板块样式
+           ========================================================================== */
+        .podcast-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+        .podcast-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .podcast-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .podcast-icon { font-size: 3.5rem; margin-bottom: 15px; display: inline-block; }
+        .podcast-title { font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+        .podcast-desc { font-size: 1rem; color: #86868b; margin-bottom: 25px; line-height: 1.5; }
+        .podcast-link {
+            display: inline-block;
+            background: #ffffff;
+            color: #0f1016;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+        .podcast-link:hover {
+            background: #f5f5f7;
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+        }
+
+        /* 联系我组件 */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-top: 10px;
+        }
+        .contact-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 28px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .contact-card h3 { margin-bottom: 12px; font-size: 1.2rem; font-weight: 600; color: #ffffff; }
+        .contact-card p { font-size: 1rem; color: #86868b; font-family: monospace; }
+
+        /* 页脚版权声明 */
+        .site-footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 0.85rem;
+            color: #86868b;
+            letter-spacing: 0.5px;
+            margin-top: auto;
+        }
+
+        @keyframes appleFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .badge { 
-            display: inline-block; 
-            padding: 6px 18px; 
-            background: linear-gradient(90deg, #ff007f, #7928ca);
-            border-radius: 50px; 
-            font-size: 0.8rem; 
-            margin-bottom: 25px; 
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+        /* 手机移动端自适应 */
+        @media (max-width: 768px) {
+            .main-container { margin: 20px auto; padding: 0 16px; }
+            .site-header { padding: 25px 20px; flex-direction: column; text-align: center; }
+            .clocks-container { width: 100%; justify-content: center; }
+            .category-nav { justify-content: center; }
+            .nav-tab { padding: 12px 16px; font-size: 0.95rem; }
+            .page-content { padding: 30px 20px; }
+            .welcome-title { font-size: 2.2rem; text-align: center; padding: 0 16px; }
         }
-        h1 { font-size: 2.8rem; margin-bottom: 20px; letter-spacing: 1px; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        p { font-size: 1.15rem; margin-bottom: 35px; opacity: 0.9; line-height: 1.7; font-weight: 300; }
-        
-        .footer { font-size: 0.9rem; opacity: 0.7; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
-        .email-link { color: #fff; text-decoration: none; border-bottom: 1px dashed rgba(255,255,255,0.6); padding-bottom: 2px; }
-        .email-link:hover { opacity: 1; color: #ff007f; border-bottom-color: #ff007f; }
     </style>
 </head>
 <body>
 
-    <!-- 语言切换按钮 -->
-    <div class="lang-switcher">
-        <button class="lang-btn active" onclick="switchLang('zh')">简体</button>
-        <button class="lang-btn" onclick="switchLang('zh-TW')">繁體</button>
-        <button class="lang-btn" onclick="switchLang('en')">EN</button>
+    <!-- 1. 自动离场的酷炫流光启动欢迎界面 -->
+    <div id="welcome-screen">
+        <h1 class="welcome-title">Welcome to Peyser's Studio</h1>
     </div>
 
-    <!-- 主体内容 -->
-    <div class="container">
-        <div class="badge" id="text-badge">COMING SOON</div>
-        <h1 id="text-title">网站施工中</h1>
-        <p id="text-desc">我知道你很急，但你先别急！<br>我们的全新官方网站正在紧锣密鼓地筹备与开发中。<br>我们将很快带着全新的面貌与您见面！</p>
-        <div class="footer" id="text-footer">
-            如需联系，请发送邮件至：<a class="email-link" href="mailto:your-email@qq.com">your-email@qq.com</a>
-        </div>
+    <!-- 主体网页内容 -->
+    <div class="main-container">
+        
+        <!-- 顶部 Header -->
+        <header class="site-header glass-panel">
+            <div class="site-info">
+                <h1>Peyser's Studio</h1>
+            </div>
+            
+            <!-- 双时区时钟 -->
+            <div class="clocks-container">
+                <div class="clock-card">
+                    <div class="clock-label">中国 (北京时间)</div>
+                    <div class="clock-time" id="bj-clock">00:00:00</div>
+                </div>
+                <div class="clock-card">
+                    <div class="clock-label">德国 (柏林时间)</div>
+                    <div class="clock-time" id="de-clock">00:00:00</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 2. 大类导航栏 (上大类) -->
+        <nav class="category-nav">
+            <button class="nav-tab active" onclick="switchTab('travel')">旅游足迹</button>
+            <button class="nav-tab" onclick="switchTab('podcast')">播客节目</button>
+            <button class="nav-tab" onclick="switchTab('contact')">联系我</button>
+        </nav>
+
+        <!-- 3. 主页面内容区域 (下主页面) -->
+        <main class="page-content glass-panel">
+            
+            <!-- 旅游主页面 -->
+            <div id="panel-travel" class="tab-panel active">
+                <h2 style="margin-bottom: 24px; font-weight: 700; letter-spacing: -0.5px;">我的旅行时间线</h2>
+                
+                <div class="timeline">
+                    <!-- 节点示例 1 -->
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <span class="timeline-date">2026.05</span>
+                        </div>
+                        <div class="timeline-zh">德国 · 杜塞尔多夫</div>
+                        <div class="timeline-en">Düsseldorf, Germany</div>
+                    </div>
+                    
+                    <!-- 节点示例 2 (带重复去过的标注框) -->
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <span class="timeline-date">2026.05</span>
+                            <span class="visit-badge">第 2 次</span>
+                        </div>
+                        <div class="timeline-zh">克罗地亚 · 普拉 & 罗维尼</div>
+                        <div class="timeline-en">Pula & Rovinj, Croatia</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 播客主页面 -->
+            <div id="panel-podcast" class="tab-panel">
+                <div class="podcast-container">
+                    <div class="podcast-card">
+                        <span class="podcast-icon">🎙️</span>
+                        <h2 class="podcast-title">《下一站，没想好》</h2>
+                        <p class="podcast-desc">一档记录真实旅程、所见与所想的个人独播旅行播客节目。</p>
+                        <!-- 你可以将下面的 '#' 替换成你实际的小宇宙/网易云/Spotify 播客主页链接 -->
+                        <a href="#" target="_blank" class="podcast-link">立即收听节目 →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 联系我主页面 -->
+            <div id="panel-contact" class="tab-panel">
+                <h2 style="margin-bottom: 24px; font-weight: 700; letter-spacing: -0.5px;">与我取得联系</h2>
+                
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <h3>📧 电子邮箱</h3>
+                        <p>x@peyser.cn</p>
+                    </div>
+                    <div class="contact-card">
+                        <h3>🌐 个人主页</h3>
+                        <p>www.peyser.cn</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-    <!-- 核心多语言逻辑脚本 -->
+    <!-- 4. 页脚版权声明 -->
+    <footer class="site-footer">
+        Copyright © 2026 Peyser's Studio. All Rights Reserved.
+    </footer>
+
     <script>
-        // 1. 定义三语文本包 (可在此处自行修改文字和邮箱)
-        const i18n = {
-            'zh': {
-                title: '网站施工中',
-                badge: '即将上线',
-                desc: '我知道你很急，但你先别急！<br>我们的全新官方网站正在紧锣密鼓地筹备与开发中。<br>我们将很快带着全新的面貌与您见面！',
-                footer: '如有业务咨询，请联系：'
-            },
-            'zh-TW': {
-                title: '網站建設中',
-                badge: '即將上線',
-                desc: '全新官方網站正在緊鑼密鼓地籌備與開發中。<br>我們將很快帶著全新的面貌與您見面，敬請期待！',
-                footer: '如有業務諮詢，請聯絡：'
-            },
-            'en': {
-                title: 'Construction in Progress',
-                badge: 'Coming Soon',
-                desc: 'The new official website is currently under development.<br>We will be launching soon with a brand new experience. Stay tuned!',
-                footer: 'For business inquiries, please contact: '
-            }
-        };
+        // 自动隐藏启动页
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('welcome-screen').classList.add('fade-out');
+            }, 2000); 
+        });
 
-        const contactEmail = "x@peyser.cn"; // 请替换成你的真实邮箱
+        // 大类主页面切换逻辑
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            event.currentTarget.classList.add('active');
 
-        // 2. 切换语言函数
-        function switchLang(lang) {
-            // 更新文本内容
-            document.getElementById('text-title').innerHTML = i18n[lang].title;
-            document.getElementById('text-badge').innerHTML = i18n[lang].badge;
-            document.getElementById('text-desc').innerHTML = i18n[lang].desc;
-            document.getElementById('text-footer').innerHTML = i18n[lang].footer + `<a class="email-link" href="mailto:${contactEmail}">${contactEmail}</a>`;
-            
-            // 切换按钮的高亮状态
-            const buttons = document.querySelectorAll('.lang-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            // 根据点击的语言给按钮加高亮
-            if(lang === 'zh') buttons[0].classList.add('active');
-            if(lang === 'zh-TW') buttons[1].classList.add('active');
-            if(lang === 'en') buttons[2].classList.add('active');
-
-            // 更改网页语言属性
-            document.documentElement.lang = lang;
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById('panel-' + tabId).classList.add('active');
         }
 
-        // 3. 自动识别用户浏览器语言（可选）
-        window.onload = function() {
-            const userLang = navigator.language || navigator.userLanguage;
-            if (userLang.includes('TW') || userLang.includes('HK')) {
-                switchLang('zh-TW');
-            } else if (userLang.includes('en')) {
-                switchLang('en');
-            } else {
-                switchLang('zh'); // 默认简体
-            }
+        // 双时区实时动态时钟
+        function updateClocks() {
+            const now = new Date();
+
+            // 北京时间 (UTC+8)
+            const bjTime = new Intl.DateTimeFormat('zh-CN', {
+                timeZone: 'Asia/Shanghai',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+            }).format(now);
+            document.getElementById('bj-clock').textContent = bjTime;
+
+            // 德国时间
+            const deTime = new Intl.DateTimeFormat('zh-CN', {
+                timeZone: 'Europe/Berlin',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+            }).format(now);
+            document.getElementById('de-clock').textContent = deTime;
         }
+
+        setInterval(updateClocks, 1000);
+        updateClocks();
     </script>
 </body>
 </html>
