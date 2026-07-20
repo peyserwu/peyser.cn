@@ -262,7 +262,7 @@
                         </div>
                     </div>
 
-                    <!-- 注册表单 -->
+                    <!-- 注册表单（已为您新增前端暗号防线） -->
                     <div class="auth-box" id="register-box" style="display: none;">
                         <h3>申请注册</h3>
                         <div class="form-group">
@@ -272,6 +272,11 @@
                         <div class="form-group">
                             <label>设置密码</label>
                             <input type="password" id="register-password" placeholder="至少 6 位密码">
+                        </div>
+                        <!-- 新增前端防线：暗号邀请码 -->
+                        <div class="form-group">
+                            <label>内部注册暗号</label>
+                            <input type="text" id="register-code" placeholder="请输入受邀暗号">
                         </div>
                         <button class="auth-btn" onclick="handleRegister()">提交注册申请</button>
                         <div class="auth-switch">已有账号？<a onclick="toggleAuthForm('login')">返回登录</a></div>
@@ -342,7 +347,8 @@
         const SUPABASE_URL = "https://ygdynxxbupraknpdjzff.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlnZHlueHhidXByYWtucGRqemZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1NjM0NDUsImV4cCI6MjEwMDEzOTQ0NX0.gQJ37DkfvxPMYXRbHHGBdS7HEqLIMjL5xW2LcPKh9CI";
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // 【已修复卡首页 Bug】改为全局作用域挂载，避免同名冲突
+        window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // 自动隐藏启动欢迎页
         window.addEventListener('DOMContentLoaded', () => {
@@ -371,8 +377,8 @@
         // 核心逻辑：真实云端用户状态与权限判定
         // ==========================================================================
         async function checkUserSession() {
-            // 1. 获取当前登录的用户 Session
-            const { data: { session } } = await supabase.auth.getSession();
+            // 获取当前登录的用户 Session
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
             
             const authBar = document.getElementById('user-status-bar');
             const emailSpan = document.getElementById('current-user-email');
@@ -389,14 +395,13 @@
                 return;
             }
 
-            // 2. 已登录，展示顶部状态栏
+            // 已登录，展示顶部状态栏
             const user = session.user;
             authBar.style.display = 'flex';
             emailSpan.textContent = `👋 ${user.email}`;
             authContainer.style.display = 'none';
 
-            // 3. 权限判定方案
-            // 如果登录的用户是作为管理员的你（邮箱包含 peyser），或者该用户的 metadata 中包含 approved
+            // 权限判定方案
             const isApproved = user.email.includes('peyser') || (user.user_metadata && user.user_metadata.is_approved === true);
 
             if (isApproved) {
@@ -414,7 +419,7 @@
             const password = document.getElementById('login-password').value;
             if(!email || !password) { alert('请填写完整信息'); return; }
 
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            const { error } = await window.supabaseClient.auth.signInWithPassword({ email, password });
             if (error) {
                 alert(`登录失败: ${error.message}`);
             } else {
@@ -423,14 +428,22 @@
             }
         }
 
-        // 真实的云端自由注册
+        // 真实的云端注册（增加了邀请码逻辑拦截）
         async function handleRegister() {
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
-            if(!email || !password) { alert('请填写完整信息'); return; }
+            const code = document.getElementById('register-code').value;
+            
+            if(!email || !password || !code) { alert('请填写完整信息（含注册暗号）'); return; }
 
-            // 注册时默认在 Metadata 里埋下待审核标记
-            const { error } = await supabase.auth.signUp({
+            // 🔒 前端暗号校对线：你可以把下面的 'Muenster2026' 改成你喜欢的任何暗号
+            if (code !== '47475') {
+                alert('注册失败：暗号错误。请向 Peyser 获取正确的内部邀请暗号。');
+                return;
+            }
+
+            // 验证通过，向 Supabase 发起注册请求
+            const { error } = await window.supabaseClient.auth.signUp({
                 email,
                 password,
                 options: { data: { is_approved: false } }
@@ -439,14 +452,14 @@
             if (error) {
                 alert(`注册失败: ${error.message}`);
             } else {
-                alert('注册成功！已自动登录，请等待管理员 Peyser 赋予您访问权限。');
+                alert('注册成功！已自动登录，请等待管理员 Peyser 确认开通访问权限。');
                 checkUserSession();
             }
         }
 
         // 真实的云端安全登出
         async function handleLogout() {
-            const { error } = await supabase.auth.signOut();
+            const { error } = await window.supabaseClient.auth.signOut();
             if (error) {
                 alert(`登出失败: ${error.message}`);
             } else {
@@ -461,8 +474,8 @@
             const email = document.getElementById('reset-email').value;
             if(!email) { alert('请输入邮箱'); return; }
             
-            const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.href, // 重置后跳回当前网页
+            const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.href, 
             });
 
             if (error) {
@@ -478,7 +491,7 @@
             const newPassword = document.getElementById(`update-password-${type}`).value;
             if(!newPassword || newPassword.length < 6) { alert('密码长度至少为 6 位'); return; }
 
-            const { error } = await supabase.auth.updateUser({ password: newPassword });
+            const { error } = await window.supabaseClient.auth.updateUser({ password: newPassword });
             if (error) {
                 alert(`修改失败: ${error.message}`);
             } else {
