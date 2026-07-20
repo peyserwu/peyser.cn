@@ -445,7 +445,7 @@
             const { error } = await window.supabaseClient.auth.signUp({
                 email,
                 password,
-                options: { data: { is_approved: false } }
+                options: { data: { is_approved: true } }
             });
 
             if (error) {
