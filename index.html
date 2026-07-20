@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peyser's Studio</title>
+    <title>Peyser.cn</title>
     <style>
-        /* 保留原本非常好看的炫酷流光动画背景 */
+        /* 炫酷动画背景：流光色彩渐变 */
         * { box-sizing: border-box; margin: 0; padding: 0; transition: all 0.3s ease; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            min-height: 100vh; 
+            height: 100vh; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             color: #fff; 
-            padding: 40px 20px;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
@@ -26,11 +25,37 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* 升级版高级感毛玻璃容器 - 增加了滚动支持以适配移动端和长内容 */
+        /* 顶部语言切换器样式 */
+        .lang-switcher {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .lang-btn:hover { background: rgba(255, 255, 255, 0.35); }
+        .lang-btn.active {
+            background: #fff;
+            color: #333;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 高级感毛玻璃容器 */
         .container { 
-            width: 100%;
-            max-width: 700px; 
-            padding: 45px 35px; 
+            max-width: 650px; 
+            padding: 50px 40px; 
             background: rgba(255, 255, 255, 0.08); 
             backdrop-filter: blur(25px); 
             -webkit-backdrop-filter: blur(25px);
@@ -44,233 +69,102 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 顶部状态栏：包含访客计数与时间 */
-        .status-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .counter-badge { 
-            padding: 6px 16px; 
+        .badge { 
+            display: inline-block; 
+            padding: 6px 18px; 
             background: linear-gradient(90deg, #ff007f, #7928ca);
             border-radius: 50px; 
-            font-size: 0.85rem; 
+            font-size: 0.8rem; 
+            margin-bottom: 25px; 
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
         }
-
-        /* 双时区时钟样式 */
-        .clocks {
-            display: flex;
-            gap: 15px;
-            font-size: 0.9rem;
-            background: rgba(0, 0, 0, 0.15);
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .clock-item { display: flex; align-items: center; gap: 5px; }
-        .clock-time { font-weight: bold; color: #ff007f; }
-
-        h1 { font-size: 2.4rem; margin-bottom: 15px; letter-spacing: 1px; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .subtitle { font-size: 1.1rem; opacity: 0.8; margin-bottom: 35px; font-weight: 300; }
+        h1 { font-size: 2.8rem; margin-bottom: 20px; letter-spacing: 1px; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        p { font-size: 1.15rem; margin-bottom: 35px; opacity: 0.9; line-height: 1.7; font-weight: 300; }
         
-        /* 核心板块：旅游时间线 */
-        .section-title {
-            font-size: 1.4rem;
-            margin: 30px 0 20px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 24px;
-            margin-bottom: 40px;
-        }
-        /* 时间线中心轴 */
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 5px;
-            bottom: 5px;
-            width: 2px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 25px;
-        }
-        .timeline-item:last-child { margin-bottom: 0; }
-
-        /* 时间线圆点 */
-        .timeline-dot {
-            position: absolute;
-            left: -24px;
-            top: 6px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ff007f;
-            box-shadow: 0 0 10px #ff007f;
-        }
-
-        .timeline-date {
-            font-size: 0.85rem;
-            opacity: 0.6;
-            margin-bottom: 4px;
-            font-weight: bold;
-        }
-
-        .timeline-content {
-            font-size: 1.05rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .timeline-content:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: translateX(5px);
-        }
-        
-        /* 国旗图标 */
-        .flag-icon {
-            font-style: normal;
-            font-size: 1.2rem;
-        }
-
-        /* 联系我板块 */
-        .footer { 
-            font-size: 0.95rem; 
-            opacity: 0.9; 
-            border-top: 1px solid rgba(255,255,255,0.1); 
-            padding-top: 25px; 
-            margin-top: 30px;
-        }
-        .email-link { color: #fff; text-decoration: none; border-bottom: 1px dashed rgba(255,255,255,0.6); padding-bottom: 2px; font-weight: bold; }
+        .footer { font-size: 0.9rem; opacity: 0.7; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .email-link { color: #fff; text-decoration: none; border-bottom: 1px dashed rgba(255,255,255,0.6); padding-bottom: 2px; }
         .email-link:hover { opacity: 1; color: #ff007f; border-bottom-color: #ff007f; }
-
-        /* 手机端/移动端完美自适应优化 */
-        @media (max-width: 600px) {
-            body { padding: 20px 12px; }
-            .container { padding: 30px 20px; border-radius: 16px; }
-            h1 { font-size: 1.8rem; }
-            .status-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .clocks { width: 100%; justify-content: space-between; font-size: 0.8rem; }
-        }
     </style>
 </head>
 <body>
 
+    <!-- 语言切换按钮 -->
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="switchLang('zh')">简体</button>
+        <button class="lang-btn" onclick="switchLang('zh-TW')">繁體</button>
+        <button class="lang-btn" onclick="switchLang('en')">EN</button>
+    </div>
+
+    <!-- 主体内容 -->
     <div class="container">
-        <!-- 顶部状态栏：访客计数器 + 实时双时区时钟 -->
-        <div class="status-header">
-            <div class="counter-badge" id="visitor-count">你是第 1,024 位访客</div>
-            <div class="clocks">
-                <div class="clock-item">
-                    <span>🇩🇪 德国:</span>
-                    <span class="clock-time" id="de-time">00:00:00</span>
-                </div>
-                <div class="clock-item">
-                    <span>🇨🇳 国内:</span>
-                    <span class="clock-time" id="cn-time">00:00:00</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 站点主标题 -->
-        <h1>Peyser's Studio</h1>
-        <div class="subtitle">欢迎来到我的个人站点。在这里，记录走过的路，留下探索的足迹。</div>
-
-        <!-- 旅游板块 (第一类：足迹时间线) -->
-        <div class="section-title">✈️ 旅游足迹</div>
-        <div class="timeline">
-            
-            <!-- 示例时间线项 1：你可以根据需要自行修改时间和城市 -->
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-date">2026年6月</div>
-                <div class="timeline-content">
-                    <i class="flag-icon">🇩🇪</i> 德国 · 杜塞尔多夫
-                </div>
-            </div>
-
-            <!-- 示例时间线项 2 -->
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-date">2026年5月</div>
-                <div class="timeline-content">
-                    <i class="flag-icon">🇭🇷</i> 克罗地亚 · 普拉、罗维尼
-                </div>
-            </div>
-
-            <!-- 示例时间线项 3 -->
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-date">2026年5月</div>
-                <div class="timeline-content">
-                    <i class="flag-icon">🇩🇪</i> 德国 · 明斯特
-                </div>
-            </div>
-
-        </div>
-
-        <!-- 联系我板块 -->
-        <div class="footer">
-            📬 <strong>联系我：</strong>
-            如有合作或交流，请发送邮件至：<a class="email-link" href="mailto:x@peyser.cn">x@peyser.cn</a>
+        <div class="badge" id="text-badge">COMING SOON</div>
+        <h1 id="text-title">网站建设中</h1>
+        <p id="text-desc">我们的全新官方网站正在紧锣密鼓地筹备与开发中。<br>我们将很快带着全新的面貌与您见面，敬请期待！</p>
+        <div class="footer" id="text-footer">
+            如有业务咨询，请联系：<a class="email-link" href="mailto:your-email@qq.com">your-email@qq.com</a>
         </div>
     </div>
 
-    <!-- 核心逻辑脚本：双时区实时时钟 + 访客数模拟 -->
+    <!-- 核心多语言逻辑脚本 -->
     <script>
-        // 1. 双时区实时刷新时钟逻辑
-        function updateClocks() {
-            const now = new Date();
+        // 1. 定义三语文本包 (可在此处自行修改文字和邮箱)
+        const i18n = {
+            'zh': {
+                title: '网站建设中',
+                badge: '即将上线',
+                desc: '全新官方网站正在紧锣密鼓地筹备与开发中。<br>我们将很快带着全新的面貌与您见面，敬请期待！',
+                footer: '如有业务咨询，请联系：'
+            },
+            'zh-TW': {
+                title: '網站建設中',
+                badge: '即將上線',
+                desc: '全新官方網站正在緊鑼密鼓地籌備與開發中。<br>我們將很快帶著全新的面貌與您見面，敬請期待！',
+                footer: '如有業務諮詢，請聯絡：'
+            },
+            'en': {
+                title: 'Construction in Progress',
+                badge: 'Coming Soon',
+                desc: 'The new official website is currently under development.<br>We will be launching soon with a brand new experience. Stay tuned!',
+                footer: 'For business inquiries, please contact: '
+            }
+        };
 
-            // 格式化选项
-            const options = {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            };
+        const contactEmail = "x@peyser.cn"; // 请替换成你的真实邮箱
 
-            // 德国时间 (欧洲中欧时间 Timezone)
-            options.timeZone = 'Europe/Berlin';
-            document.getElementById('de-time').innerText = now.toLocaleTimeString('zh-CN', options);
+        // 2. 切换语言函数
+        function switchLang(lang) {
+            // 更新文本内容
+            document.getElementById('text-title').innerHTML = i18n[lang].title;
+            document.getElementById('text-badge').innerHTML = i18n[lang].badge;
+            document.getElementById('text-desc').innerHTML = i18n[lang].desc;
+            document.getElementById('text-footer').innerHTML = i18n[lang].footer + `<a class="email-link" href="mailto:${contactEmail}">${contactEmail}</a>`;
+            
+            // 切换按钮的高亮状态
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // 根据点击的语言给按钮加高亮
+            if(lang === 'zh') buttons[0].classList.add('active');
+            if(lang === 'zh-TW') buttons[1].classList.add('active');
+            if(lang === 'en') buttons[2].classList.add('active');
 
-            // 国内北京时间 (中国标准时间 Timezone)
-            options.timeZone = 'Asia/Shanghai';
-            document.getElementById('cn-time').innerText = now.toLocaleTimeString('zh-CN', options);
+            // 更改网页语言属性
+            document.documentElement.lang = lang;
         }
 
-        // 每秒自动刷新一次时钟
-        setInterval(updateClocks, 1000);
-        updateClocks(); // 页面加载时立即执行一次
-
-        // 2. 基础访客计数器（纯前端模拟，未来你可以对接真实的后台API或LocalStorage）
-        function initVisitorCounter() {
-            // 这里随机生成一个基础数字模拟展示
-            const baseCount = Math.floor(Math.random() * 500) + 1200;
-            document.getElementById('visitor-count').innerText = `你是第 ${baseCount.toLocaleString()} 位访客`;
+        // 3. 自动识别用户浏览器语言（可选）
+        window.onload = function() {
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.includes('TW') || userLang.includes('HK')) {
+                switchLang('zh-TW');
+            } else if (userLang.includes('en')) {
+                switchLang('en');
+            } else {
+                switchLang('zh'); // 默认简体
+            }
         }
-        initVisitorCounter();
     </script>
 </body>
 </html>
