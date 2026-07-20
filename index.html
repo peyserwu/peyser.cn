@@ -376,42 +376,41 @@
         // ==========================================================================
         // 核心逻辑：真实云端用户状态与权限判定
         // ==========================================================================
-        async function checkUserSession() {
-            // 获取当前登录的用户 Session
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            
-            const authBar = document.getElementById('user-status-bar');
-            const emailSpan = document.getElementById('current-user-email');
-            const authContainer = document.getElementById('auth-container');
-            const pendingContainer = document.getElementById('pending-container');
-            const secretContainer = document.getElementById('secret-container');
+ async function checkUserSession() {
+    // 💡 核心改动：不再单单获取本地 Session，而是强制向 Supabase 服务器拉取最新的用户信息
+    const { data: { user }, error } = await window.supabaseClient.auth.getUser();
+    
+    const authBar = document.getElementById('user-status-bar');
+    const emailSpan = document.getElementById('current-user-email');
+    const authContainer = document.getElementById('auth-container');
+    const pendingContainer = document.getElementById('pending-container');
+    const secretContainer = document.getElementById('secret-container');
 
-            if (!session) {
-                // 未登录状态
-                authBar.style.display = 'none';
-                authContainer.style.display = 'block';
-                pendingContainer.style.display = 'none';
-                secretContainer.style.display = 'none';
-                return;
-            }
+    if (error || !user) {
+        // 未登录状态
+        authBar.style.display = 'none';
+        authContainer.style.display = 'block';
+        pendingContainer.style.display = 'none';
+        secretContainer.style.display = 'none';
+        return;
+    }
 
-            // 已登录，展示顶部状态栏
-            const user = session.user;
-            authBar.style.display = 'flex';
-            emailSpan.textContent = `👋 ${user.email}`;
-            authContainer.style.display = 'none';
+    // 已登录，展示顶部状态栏
+    authBar.style.display = 'flex';
+    emailSpan.textContent = `👋 ${user.email}`;
+    authContainer.style.display = 'none';
 
-            // 权限判定方案
-            const isApproved = user.email.includes('peyser') || (user.user_metadata && user.user_metadata.is_approved === true);
+    // 权限判定方案
+    const isApproved = user.email.includes('peyser') || (user.user_metadata && user.user_metadata.is_approved === true);
 
-            if (isApproved) {
-                pendingContainer.style.display = 'none';
-                secretContainer.style.display = 'block';
-            } else {
-                pendingContainer.style.display = 'block';
-                secretContainer.style.display = 'none';
-            }
-        }
+    if (isApproved) {
+        pendingContainer.style.display = 'none';
+        secretContainer.style.display = 'block';
+    } else {
+        pendingContainer.style.display = 'block';
+        secretContainer.style.display = 'none';
+    }
+}
 
         // 真实的云端安全登录
         async function handleLogin() {
