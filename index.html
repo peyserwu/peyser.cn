@@ -3,15 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>网站建设中</title>
+    <title>Peyser.cn</title>
     <style>
-        body { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; background: #f4f6f9; color: #333; }
-        h1 { font-size: 2.5rem; color: #0052cc; margin-bottom: 8px; }
-        p { font-size: 1.1rem; color: #666; }
+        /* 炫酷动画背景：流光色彩渐变 */
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: all 0.3s ease; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: #fff; 
+            overflow: hidden;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 顶部语言切换器样式 */
+        .lang-switcher {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .lang-btn:hover { background: rgba(255, 255, 255, 0.35); }
+        .lang-btn.active {
+            background: #fff;
+            color: #333;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 高级感毛玻璃容器 */
+        .container { 
+            max-width: 650px; 
+            padding: 50px 40px; 
+            background: rgba(255, 255, 255, 0.08); 
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            animation: fadeIn 1.2s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .badge { 
+            display: inline-block; 
+            padding: 6px 18px; 
+            background: linear-gradient(90deg, #ff007f, #7928ca);
+            border-radius: 50px; 
+            font-size: 0.8rem; 
+            margin-bottom: 25px; 
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+        }
+        h1 { font-size: 2.8rem; margin-bottom: 20px; letter-spacing: 1px; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        p { font-size: 1.15rem; margin-bottom: 35px; opacity: 0.9; line-height: 1.7; font-weight: 300; }
+        
+        .footer { font-size: 0.9rem; opacity: 0.7; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .email-link { color: #fff; text-decoration: none; border-bottom: 1px dashed rgba(255,255,255,0.6); padding-bottom: 2px; }
+        .email-link:hover { opacity: 1; color: #ff007f; border-bottom-color: #ff007f; }
     </style>
 </head>
 <body>
-    <h1>网站建设中...</h1>
-    <p>我们的新网站正在筹备中，敬请期待！</p>
+
+    <!-- 语言切换按钮 -->
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="switchLang('zh')">简体</button>
+        <button class="lang-btn" onclick="switchLang('zh-TW')">繁體</button>
+        <button class="lang-btn" onclick="switchLang('en')">EN</button>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="container">
+        <div class="badge" id="text-badge">COMING SOON</div>
+        <h1 id="text-title">网站建设中</h1>
+        <p id="text-desc">我们的全新官方网站正在紧锣密鼓地筹备与开发中。<br>我们将很快带着全新的面貌与您见面，敬请期待！</p>
+        <div class="footer" id="text-footer">
+            如有业务咨询，请联系：<a class="email-link" href="mailto:your-email@qq.com">your-email@qq.com</a>
+        </div>
+    </div>
+
+    <!-- 核心多语言逻辑脚本 -->
+    <script>
+        // 1. 定义三语文本包 (可在此处自行修改文字和邮箱)
+        const i18n = {
+            'zh': {
+                title: '网站建设中',
+                badge: '即将上线',
+                desc: '全新官方网站正在紧锣密鼓地筹备与开发中。<br>我们将很快带着全新的面貌与您见面，敬请期待！',
+                footer: '如有业务咨询，请联系：'
+            },
+            'zh-TW': {
+                title: '網站建設中',
+                badge: '即將上線',
+                desc: '全新官方網站正在緊鑼密鼓地籌備與開發中。<br>我們將很快帶著全新的面貌與您見面，敬請期待！',
+                footer: '如有業務諮詢，請聯絡：'
+            },
+            'en': {
+                title: 'Construction in Progress',
+                badge: 'Coming Soon',
+                desc: 'The new official website is currently under development.<br>We will be launching soon with a brand new experience. Stay tuned!',
+                footer: 'For business inquiries, please contact: '
+            }
+        };
+
+        const contactEmail = "x@peyser.cn"; // 请替换成你的真实邮箱
+
+        // 2. 切换语言函数
+        function switchLang(lang) {
+            // 更新文本内容
+            document.getElementById('text-title').innerHTML = i18n[lang].title;
+            document.getElementById('text-badge').innerHTML = i18n[lang].badge;
+            document.getElementById('text-desc').innerHTML = i18n[lang].desc;
+            document.getElementById('text-footer').innerHTML = i18n[lang].footer + `<a class="email-link" href="mailto:${contactEmail}">${contactEmail}</a>`;
+            
+            // 切换按钮的高亮状态
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // 根据点击的语言给按钮加高亮
+            if(lang === 'zh') buttons[0].classList.add('active');
+            if(lang === 'zh-TW') buttons[1].classList.add('active');
+            if(lang === 'en') buttons[2].classList.add('active');
+
+            // 更改网页语言属性
+            document.documentElement.lang = lang;
+        }
+
+        // 3. 自动识别用户浏览器语言（可选）
+        window.onload = function() {
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.includes('TW') || userLang.includes('HK')) {
+                switchLang('zh-TW');
+            } else if (userLang.includes('en')) {
+                switchLang('en');
+            } else {
+                switchLang('zh'); // 默认简体
+            }
+        }
+    </script>
 </body>
 </html>
