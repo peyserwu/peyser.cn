@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peyser Wu</title>
+    <style>
+        /* 全局基础重置 */
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: all 0.3s ease; }
+        
+        /* 奢华深紫微醺流光色彩渐变背景 */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; 
+            background: linear-gradient(-45deg, #0d0614, #1a0826, #2d0c3f, #150921, #0a0410);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: #fff; 
+            overflow-x: hidden;
+            padding: 40px 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 顶部右侧语言切换器 */
+        .lang-switcher {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .lang-btn:hover { 
+            background: rgba(255, 255, 255, 0.18); 
+            color: #fff;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: #fff;
+            font-weight: 700;
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+        }
+
+        /* 无框沉浸式文字排版 */
+        .hero-section {
+            max-width: 800px;
+            width: 100%;
+            text-align: left;
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 呼吸灯徽章 */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(192, 132, 252, 0.3);
+            border-radius: 30px;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            color: #c084fc;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #a855f7;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #a855f7;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.3); }
+            100% { opacity: 0.4; transform: scale(0.9); }
+        }
+
+        /* 主标题 */
+        h1 {
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 40%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 正文描述 */
+        p.desc {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 300;
+            margin-bottom: 35px;
+            max-width: 680px;
+        }
+
+        /* 引导提示语 */
+        .sub-notice {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 快捷功能按钮群 */
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 45px;
+        }
+
+        .nav-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 26px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .nav-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(192, 132, 252, 0.5);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.25);
+        }
+
+        .nav-card .arrow {
+            font-size: 1rem;
+            opacity: 0.6;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-card:hover .arrow {
+            opacity: 1;
+            color: #c084fc;
+            transform: translateX(5px);
+        }
+
+        /* 页脚 */
+        .footer {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.45);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 25px;
+        }
+
+        .email-link {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+            padding-bottom: 2px;
+        }
+
+        .email-link:hover {
+            color: #c084fc;
+            border-bottom-color: #c084fc;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 语言切换器 -->
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="switchLang('zh')">简体</button>
+        <button class="lang-btn" onclick="switchLang('zh-TW')">繁體</button>
+        <button class="lang-btn" onclick="switchLang('en')">EN</button>
+    </div>
+
+    <!-- 无框沉浸式主体 -->
+    <main class="hero-section">
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            <span id="text-badge">WIP / 正在疯狂敲代码</span>
+        </div>
+
+        <h1 id="text-title">主页正在渡劫重建 🚧</h1>
+
+        <p class="desc" id="text-desc">
+            别急！新主页正在极速上线中。<br>程序员正在夜以继日地给代码开光，请稍微再给一点点时间！
+        </p>
+
+        <!-- 引导提示语 -->
+        <div class="sub-notice" id="text-notice">不过，你仍然可以去这些地方逛逛：</div>
+
+        <div class="nav-links">
+            <!-- 播客入口 -->
+            <a href="https://www.xiaoyuzhoufm.com/episode/6a226196b30e1571aea10be1?s=eyJ1IjoiNjZjMWI1YWJlZGNlNjcxMDRhZGZmZDY3In0%3D" class="nav-card" target="_blank" id="btn-podcast">
+                <span class="icon">🎙️</span>
+                <span>播客「下一站，没想好」</span>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- Bistro 入口 -->
+            <a href="https://bistro.peyser.cn" class="nav-card" target="_blank" id="btn-bistro">
+                <span class="icon">🍷</span>
+                <span>Bistro 小馆</span>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <footer class="footer" id="text-footer">
+            有事找我？发个电邮：<a class="email-link" href="mailto:info@peyser.cn">info@peyser.cn</a>
+        </footer>
+    </main>
+
+    <!-- 核心多语言逻辑脚本 -->
+    <script>
+        const contactEmail = "x@peyser.cn";
+
+        // 三种语言不同性格的幽默文案包
+        const i18n = {
+            'zh': {
+                badge: 'WIP / 正在疯狂敲代码',
+                title: '主页正在渡劫重建 🚧',
+                desc: '别急！新主页正在极速上线中。<br>程序员正在夜以继日地给代码开光，请稍微再给一点点时间！',
+                notice: '不过，你仍然可以去这些地方逛逛：',
+                podcast: '播客「下一站，没想好」',
+                bistro: 'Bistro 小馆',
+                footer: '有事找我？发个电邮：'
+            },
+            'zh-TW': {
+                badge: 'WIP / 施工中，請勿喂食',
+                title: '主頁正在重新修煉 🍵',
+                desc: '稍安勿躁！新版主頁正在精心打磨中。<br>正在用最優雅的姿勢敲擊鍵盤，請給我們留一盞茶的時間！',
+                notice: '在等待的同時，不妨先去這裏走走：',
+                podcast: '播客「下一站，沒想好」',
+                bistro: 'Bistro 小館',
+                footer: '有事相尋？歡迎來信：'
+            },
+            'en': {
+                badge: 'POWERED BY CAFFEINE ☕',
+                title: 'Site Under Construction 🚧',
+                desc: 'Hold tight! Something awesome is brewing here.<br>The dev is currently fueling on dark roast coffee and wrestling with CSS bugs.',
+                notice: 'In the meantime, feel free to drop by:',
+                podcast: 'Podcast "Next Stop, TBD"',
+                bistro: 'Bistro',
+                footer: 'Wanna say hi? Send an email: '
+            }
+        };
+
+        function switchLang(lang) {
+            document.getElementById('text-badge').innerHTML = i18n[lang].badge;
+            document.getElementById('text-title').innerHTML = i18n[lang].title;
+            document.getElementById('text-desc').innerHTML = i18n[lang].desc;
+            document.getElementById('text-notice').innerHTML = i18n[lang].notice;
+            
+            // 更新按钮文字
+            document.querySelector('#btn-podcast span:nth-child(2)').innerText = i18n[lang].podcast;
+            document.querySelector('#btn-bistro span:nth-child(2)').innerText = i18n[lang].bistro;
+            
+            // 更新页脚
+            document.getElementById('text-footer').innerHTML = i18n[lang].footer + `<a class="email-link" href="mailto:${contactEmail}">${contactEmail}</a>`;
+            
+            // 高亮按钮样式切换
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            if(lang === 'zh') buttons[0].classList.add('active');
+            if(lang === 'zh-TW') buttons[1].classList.add('active');
+            if(lang === 'en') buttons[2].classList.add('active');
+
+            document.documentElement.lang = lang;
+        }
+
+        // 页面载入自动识别系统语言
+        window.onload = function() {
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.includes('TW') || userLang.includes('HK')) {
+                switchLang('zh-TW');
+            } else if (userLang.includes('en')) {
+                switchLang('en');
+            } else {
+                switchLang('zh');
+            }
+        }
+    </script>
+</body>
+</html>
