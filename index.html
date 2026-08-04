@@ -48,28 +48,54 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             white-space: nowrap;
+            text-decoration: none;
+            cursor: pointer;
         }
 
-        /* 极简精致时钟组件（统一等宽数字字体） */
-        .time-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .brand-logo:hover {
+            opacity: 0.85;
+        }
+
+        /* 轮播时钟容器 */
+        .time-slider-container {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 6px 14px;
+            padding: 6px 16px;
             border-radius: 30px;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.75);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            height: 34px;
+            overflow: hidden;
+            position: relative;
+            min-width: 200px;
         }
 
         .time-badge {
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            gap: 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .time-badge.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .time-badge.exit {
+            opacity: 0;
+            transform: translateY(-100%);
         }
 
         .time-label {
@@ -84,16 +110,11 @@
 
         .time-val {
             font-family: -apple-system, BlinkMacSystemFont, "SF Mono", "Roboto Mono", "Segoe UI Mono", monospace;
+            font-size: 0.82rem;
             font-weight: 500;
             letter-spacing: -0.2px;
             color: rgba(255, 255, 255, 0.9);
             font-variant-numeric: tabular-nums;
-        }
-
-        .time-divider {
-            width: 1px;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.15);
         }
 
         /* ------------------ 主体容器 & 顺序进场动画 ------------------ */
@@ -108,7 +129,6 @@
             padding: 20px 0;
         }
 
-        /* 标题打字机/发光渐变动画 */
         h1.hero-title {
             font-size: clamp(2rem, 5vw, 3.2rem);
             font-weight: 900;
@@ -131,7 +151,6 @@
             }
         }
 
-        /* 随后的内容组件淡入淡出动画 */
         .animate-content {
             opacity: 0;
             transform: translateY(25px);
@@ -250,6 +269,7 @@
         .nav-card {
             display: inline-flex;
             align-items: center;
+            justify-content: space-between;
             gap: 8px;
             padding: 12px 20px;
             background: rgba(255, 255, 255, 0.04);
@@ -262,6 +282,8 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            user-select: none;
         }
 
         .nav-card:hover {
@@ -269,6 +291,56 @@
             border-color: rgba(192, 132, 252, 0.4);
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+        }
+
+        /* 播客展开按钮的箭头标志 */
+        .arrow-icon {
+            font-size: 0.7rem;
+            margin-left: 4px;
+            color: rgba(255, 255, 255, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-card.active .arrow-icon {
+            transform: rotate(180deg);
+            color: #c084fc;
+        }
+
+        /* 播客展开二级菜单容器 */
+        .sub-nav-container {
+            width: 100%;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sub-nav-container.open {
+            max-height: 80px;
+            opacity: 1;
+            margin-top: -4px;
+            margin-bottom: 4px;
+        }
+
+        /* 二级菜单专属醒目对比样式 */
+        .sub-nav-card {
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.12), rgba(124, 58, 237, 0.18));
+            border: 1px dashed rgba(192, 132, 252, 0.4);
+            border-left: 3px solid #c084fc;
+            padding: 10px 18px 10px 24px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            color: #e9d5ff;
+            width: fit-content;
+        }
+
+        .sub-nav-card:hover {
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.22), rgba(124, 58, 237, 0.28));
+            border-color: #c084fc;
+            box-shadow: 0 4px 15px rgba(192, 132, 252, 0.3);
         }
 
         /* 页脚 */
@@ -334,15 +406,19 @@
                 font-size: 1.15rem;
             }
 
-            .time-container {
-                padding: 4px 10px;
-                gap: 8px;
-                font-size: 0.75rem;
+            .time-slider-container {
+                padding: 4px 12px;
+                min-width: 170px;
+                height: 30px;
             }
 
             .time-label {
                 font-size: 0.65rem;
                 padding: 1px 4px;
+            }
+
+            .time-val {
+                font-size: 0.75rem;
             }
 
             .main-container {
@@ -369,10 +445,14 @@
             }
 
             .nav-card {
-                width: calc(50% - 6px); /* 移动端双列排列 */
+                width: calc(50% - 6px);
                 justify-content: center;
                 padding: 12px 10px;
                 font-size: 0.85rem;
+            }
+
+            .sub-nav-card {
+                width: 100%;
             }
 
             .footer {
@@ -392,16 +472,16 @@
 
     <!-- 顶部栏 -->
     <header class="header">
-        <div class="brand-logo">Peyser's Studio</div>
+        <!-- 左上角标题点击返回主页 -->
+        <a href="#" class="brand-logo">Peyser's Studio</a>
         
-        <!-- 精致 DE / CN 时间展示 -->
-        <div class="time-container">
-            <div class="time-badge">
+        <!-- 自动翻页交替展示 DE / CN 时间 -->
+        <div class="time-slider-container">
+            <div class="time-badge active" id="badge-de">
                 <span class="time-label">DE</span>
                 <span class="time-val" id="time-de">--.--.-- --:--:--</span>
             </div>
-            <div class="time-divider"></div>
-            <div class="time-badge">
+            <div class="time-badge" id="badge-cn">
                 <span class="time-label">CN</span>
                 <span class="time-val" id="time-cn">--.--.-- --:--:--</span>
             </div>
@@ -430,18 +510,36 @@
                 </form>
             </div>
 
-            <!-- 主站入口 -->
-            <div class="section-title">服务 & 探索</div>
+            <!-- Studio Zone 类目（原 Bistro 已移至此处） -->
+            <div class="section-title">Studio Zone</div>
             <div class="nav-links">
+                <!-- Bistro (Beta) -->
                 <a href="https://bistro.peyser.cn" class="nav-card" target="_blank">
                     <span>🍷 Bistro (Beta)</span>
                 </a>
-                <a href="https://www.xiaoyuzhoufm.com/episode/6a226196b30e1571aea10be1?s=eyJ1IjoiNjZjMWI1YWJlZGNlNjcxMDRhZGZmZDY3In0%3D" class="nav-card" target="_blank">
-                    <span>🎙️ 播客「下一站，没想好」</span>
+                <!-- 邮箱 -->
+                <a href="https://qiye.163.com" class="nav-card" target="_blank">
+                    <span>📧 邮箱</span>
                 </a>
+                <!-- 播客（含展开箭头） -->
+                <div class="nav-card" id="podcast-parent-card" onclick="togglePodcastMenu(event)">
+                    <span>🎙️ 播客</span>
+                    <span class="arrow-icon">▼</span>
+                </div>
+                <!-- 文件（内部文件分享） -->
+                <a href="#" class="nav-card" target="_blank">
+                    <span>📁 文件</span>
+                </a>
+
+                <!-- 播客二级的子菜单列表（虚线边框+紫色高亮与一级拉开区别） -->
+                <div class="sub-nav-container" id="podcast-sub-menu">
+                    <a href="https://www.xiaoyuzhoufm.com/episode/6a226196b30e1571aea10be1?s=eyJ1IjoiNjZjMWI1YWJlZGNlNjcxMDRhZGZmZDY3In0%3D" class="nav-card sub-nav-card" target="_blank">
+                        <span>🎙️ 下一站，没想好</span>
+                    </a>
+                </div>
             </div>
 
-            <!-- 工具箱 -->
+            <!-- 实用工具 -->
             <div class="section-title">实用工具</div>
             <div class="nav-links">
                 <a href="https://gemini.google.com" class="nav-card" target="_blank">
@@ -450,7 +548,7 @@
                 <a href="https://chatgpt.com" class="nav-card" target="_blank">
                     <span>🤖 ChatGPT</span>
                 </a>
-                <a href="https://cobalt.tools" class="nav-card" target="_blank">
+                <a href="https://greenvideo.cc/" class="nav-card" target="_blank">
                     <span>🎬 视频提取</span>
                 </a>
                 <a href="https://vocalremover.org/zh/" class="nav-card" target="_blank">
@@ -471,7 +569,7 @@
             <footer class="footer">
                 <div class="footer-left">
                     <div>有事找我？发个电邮：<a class="email-link" href="mailto:info@peyser.cn">info@peyser.cn</a></div>
-                    <span class="version-badge">V1.0.0</span>
+                    <span class="version-badge">V1.0.1</span>
                 </div>
                 <div class="copyright">
                     © <span id="copyright-year"></span> Peyser's Studio. All rights reserved.
@@ -502,7 +600,7 @@
             }
         }
 
-        // 双时区实时时间更新脚本（含精确秒数）
+        // 双时区时间获取逻辑
         function updateTime() {
             const now = new Date();
 
@@ -535,6 +633,44 @@
             document.getElementById('time-cn').innerText = formatterCN.format(now).replace(/\//g, '.');
         }
 
+        // 时间轮播逻辑 (每 3 秒交替上翻切换 DE / CN)
+        let currentBadgeIndex = 0;
+        function switchTimeBadge() {
+            const badgeDE = document.getElementById('badge-de');
+            const badgeCN = document.getElementById('badge-cn');
+
+            if (currentBadgeIndex === 0) {
+                badgeDE.classList.remove('active');
+                badgeDE.classList.add('exit');
+                badgeCN.classList.remove('exit');
+                badgeCN.classList.add('active');
+                currentBadgeIndex = 1;
+            } else {
+                badgeCN.classList.remove('active');
+                badgeCN.classList.add('exit');
+                badgeDE.classList.remove('exit');
+                badgeDE.classList.add('active');
+                currentBadgeIndex = 0;
+            }
+
+            setTimeout(() => {
+                if (currentBadgeIndex === 0) {
+                    badgeCN.classList.remove('exit');
+                } else {
+                    badgeDE.classList.remove('exit');
+                }
+            }, 600);
+        }
+
+        // 播客菜单二次展开/收起切换
+        function togglePodcastMenu(event) {
+            event.stopPropagation();
+            const parentCard = document.getElementById('podcast-parent-card');
+            const subMenu = document.getElementById('podcast-sub-menu');
+            parentCard.classList.toggle('active');
+            subMenu.classList.toggle('open');
+        }
+
         // 根据本机当前时间动态设置问候语
         function updateGreeting() {
             const hour = new Date().getHours();
@@ -561,8 +697,10 @@
         // 页面初始化执行
         updateGreeting();
         updateTime();
-        // 1秒刷新一次（带秒数显示）
+
+        // 1秒刷新一次时间，3秒翻页一次
         setInterval(updateTime, 1000);
+        setInterval(switchTimeBadge, 3000);
     </script>
 </body>
 </html>
