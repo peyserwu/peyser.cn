@@ -533,10 +533,10 @@
             <nav class="category-tabs-nav" id="tabs-nav">
                 <button class="category-tab-btn active" onclick="switchCategory('panel-common', this)">常用</button>
                 <button class="category-tab-btn" onclick="switchCategory('panel-studio', this)">Studio Zone</button>
-                <button class="category-tab-btn" onclick="switchCategory('panel-games', this)">🎮 游戏类</button>
-                <button class="category-tab-btn" onclick="switchCategory('panel-travel', this)">🚗 出行 & 通信</button>
-                <button class="category-tab-btn" onclick="switchCategory('panel-media', this)">🎬 音视频工具</button>
-                <button class="category-tab-btn" onclick="switchCategory('panel-aviation', this)">✈️ 航空类</button>
+                <button class="category-tab-btn" onclick="switchCategory('panel-games', this)">🎮 游戏</button>
+                <button class="category-tab-btn" onclick="switchCategory('panel-travel', this)">📶 通信</button>
+                <button class="category-tab-btn" onclick="switchCategory('panel-media', this)">🎬 音视频</button>
+                <button class="category-tab-btn" onclick="switchCategory('panel-aviation', this)">✈️ 航空</button>
                 <!-- 炫酷发光下划线跟随条 -->
                 <div class="tab-indicator" id="tab-indicator"></div>
             </nav>
@@ -546,30 +546,37 @@
                 
                 <!-- 1. 常用 -->
                 <div class="tab-panel active" id="panel-common">
+                    <a href="https://efa.vrr.de/niadreiplus/departureMonitor/?branding=niag&lng=de" class="nav-card" target="_blank"><span>🚌 NIAG 查询</span></a>
+                    <a href="https://www.bahnhof.de/" class="nav-card" target="_blank"><span>🚄 DB SEV 位置查询</span></a>
+                    <a href="https://www.zuginfo.nrw/" class="nav-card" target="_blank"><span>🚄 NRW Zuginfo</span></a>
                     <a href="https://chatgpt.com" class="nav-card" target="_blank"><span>🤖 ChatGPT</span></a>
                     <a href="https://gemini.google.com" class="nav-card" target="_blank"><span>✨ Gemini</span></a>
                     <a href="https://maps.google.com" class="nav-card" target="_blank"><span>🗺️ Google 地图</span></a>
                     <a href="https://mail.proton.me" class="nav-card" target="_blank"><span>🔒 Proton Mail</span></a>
+                    
+
                 </div>
 
                 <!-- 2. Studio Zone -->
                 <div class="tab-panel" id="panel-studio">
                     <a href="https://bistro.peyser.cn" class="nav-card" target="_blank"><span>🍷 Bistro (Beta)</span></a>
-                    <a href="https://qiye.163.com" class="nav-card" target="_blank"><span>📧 邮箱</span></a>
+                    <a href="qiye.163.com/login/" class="nav-card" target="_blank"><span>📧 邮箱</span></a>
                     <a href="https://www.xiaoyuzhoufm.com/episode/6a226196b30e1571aea10be1?s=eyJ1IjoiNjZjMWI1YWJlZGNlNjcxMDRhZGZmZDY3In0%3D" class="nav-card" target="_blank"><span>🎙️ 播客（下一站，没想好）</span></a>
-                    <a href="#" class="nav-card" target="_blank"><span>📁 文件</span></a>
+                    <a href="#" class="nav-card" target="_blank"><span>📁 文件（暂不可用）</span></a>
                 </div>
 
-                <!-- 3. 游戏类 -->
+                <!-- 3. 游戏 -->
                 <div class="tab-panel" id="panel-games">
                     <div class="sub-nav-group-title">🚛 TruckersMP (TMP)</div>
-                    <a href="https://truckersmp.com" class="nav-card" target="_blank"><span>TMP 主页</span></a>
-                    <a href="https://truckersmp.com/reports/create" class="nav-card" target="_blank"><span>TMP 检举</span></a>
-                    <a href="https://map.truckersmp.com/" class="nav-card" target="_blank"><span>TMP 地图</span></a>
-                    <a href="https://traffic.krashnz.com/" class="nav-card" target="_blank"><span>TMP 流量</span></a>
+                    <a href="https://truckersmp.com" class="nav-card" target="_blank"><span>主页</span></a>
+                    <a href="https://truckersmp.com/reports/create" class="nav-card" target="_blank"><span>检举</span></a>
+                    <a href="https://map.truckersmp.com/" class="nav-card" target="_blank"><span>地图</span></a>
+                    <a href="https://traffic.krashnz.com/" class="nav-card" target="_blank"><span>交通流量</span></a>
+                    <div class="sub-nav-group-title">💂 钢铁雄心4</div>
+                    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2160148704" class="nav-card" target="_blank"><span>控制台指令</span></a>
                 </div>
 
-                <!-- 4. 出行 & 通信 -->
+                <!-- 4. 通信 -->
                 <div class="tab-panel" id="panel-travel">
                     <a href="https://opensignal.com" class="nav-card" target="_blank"><span>📶 OpenSignal</span></a>
                     <a href="https://www.spectrum-tracker.com/" class="nav-card" target="_blank"><span>📡 Spectrum</span></a>
@@ -582,7 +589,7 @@
                     <a href="https://vocalremover.org/zh/" class="nav-card" target="_blank"><span>🎵 伴奏分离</span></a>
                 </div>
 
-                <!-- 6. 航空类 -->
+                <!-- 6. 航空 -->
                 <div class="tab-panel" id="panel-aviation">
                     <a href="https://www.flightradar24.com" class="nav-card" target="_blank"><span>✈️ FR24</span></a>
                     <a href="https://map.variflight.com/" class="nav-card" target="_blank"><span>🛩️ 飞常准</span></a>
@@ -599,7 +606,7 @@
             <footer class="footer">
                 <div class="footer-left">
                     <div>有事找我？发个电邮：<a class="email-link" href="mailto:info@peyser.cn">info@peyser.cn</a></div>
-                    <span class="version-badge">V1.0.2</span>
+                    <span class="version-badge">V1.0.3</span>
                 </div>
                 <div class="copyright">
                     © <span id="copyright-year"></span> Peyser's Studio. All rights reserved.
