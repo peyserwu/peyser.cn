@@ -8,7 +8,7 @@
     <link rel="icon" href="https://api.iconify.design/heroicons:sparkles-20-solid.svg?color=%23c084fc" type="image/svg+xml">
     <style>
         /* 全局基础重置 */
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: all 0.3s ease; }
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: all 0.25s ease; }
         
         /* 奢华深紫微醺流光色彩渐变背景 */
         body { 
@@ -119,14 +119,14 @@
 
         /* ------------------ 主体容器 & 顺序进场动画 ------------------ */
         .main-container {
-            max-width: 800px;
+            max-width: 850px;
             width: 100%;
             margin: 0 auto;
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         h1.hero-title {
@@ -134,7 +134,7 @@
             font-weight: 900;
             line-height: 1.25;
             letter-spacing: -0.5px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 40%, #c084fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -154,7 +154,7 @@
         .animate-content {
             opacity: 0;
             transform: translateY(25px);
-            animation: contentFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+            animation: contentFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
         }
 
         @keyframes contentFadeIn {
@@ -164,9 +164,9 @@
             }
         }
 
-        /* 搜索框组件 */
+        /* ------------------ 搜索框组件 ------------------ */
         .search-section {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .engine-tabs {
@@ -200,6 +200,7 @@
             height: 2px;
             background: #c084fc;
             border-radius: 2px;
+            box-shadow: 0 0 8px #c084fc;
         }
 
         .search-box {
@@ -249,31 +250,84 @@
             transform: scale(1.05);
         }
 
-        /* 快捷链接分栏 */
-        .section-title {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.45);
-            margin-bottom: 14px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            padding-left: 2px;
+        /* ------------------ 无外框下划线高亮导航 Tab ------------------ */
+        .category-tabs-nav {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
         }
 
-        .nav-links {
-            display: flex;
+        .category-tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.55);
+            padding: 8px 2px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .category-tab-btn:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .category-tab-btn.active {
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
+        }
+
+        /* 动态发光跟随下划线 */
+        .tab-indicator {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #c084fc, #a855f7);
+            border-radius: 3px;
+            box-shadow: 0 0 12px #c084fc, 0 0 4px #a855f7;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        /* ------------------ 内容 Tab 面板 & 卡片阶梯弹入动画 ------------------ */
+        .tab-panel-container {
+            min-height: 160px;
+            margin-bottom: 40px;
+        }
+
+        .tab-panel {
+            display: none;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 30px;
         }
 
+        .tab-panel.active {
+            display: flex;
+        }
+
+        /* 网址卡片样式 */
         .nav-card {
             display: inline-flex;
             align-items: center;
-            justify-content: space-between;
             gap: 8px;
             padding: 12px 20px;
             background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
             color: #fff;
             text-decoration: none;
@@ -283,64 +337,42 @@
             -webkit-backdrop-filter: blur(15px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
             cursor: pointer;
-            user-select: none;
+            
+            /* 阶梯动画初始状态 */
+            opacity: 0;
+            transform: translateY(18px) scale(0.96);
+            transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        /* 当 Tab 激活时触发子元素的阶梯式顺滑淡入 */
+        .tab-panel.active .nav-card,
+        .tab-panel.active .sub-nav-group-title {
+            animation: cardWaveIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes cardWaveIn {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .nav-card:hover {
             background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(192, 132, 252, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+            border-color: rgba(192, 132, 252, 0.5);
+            transform: translateY(-3px) scale(1.02) !important;
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
         }
 
-        /* 播客展开按钮的箭头标志 */
-        .arrow-icon {
-            font-size: 0.7rem;
-            margin-left: 4px;
-            color: rgba(255, 255, 255, 0.5);
-            transition: transform 0.3s ease;
-        }
-
-        .nav-card.active .arrow-icon {
-            transform: rotate(180deg);
-            color: #c084fc;
-        }
-
-        /* 播客展开二级菜单容器 */
-        .sub-nav-container {
+        .sub-nav-group-title {
             width: 100%;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            font-size: 0.8rem;
+            color: #c084fc;
+            font-weight: 700;
+            margin-bottom: 2px;
+            padding-left: 2px;
             opacity: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .sub-nav-container.open {
-            max-height: 80px;
-            opacity: 1;
-            margin-top: -4px;
-            margin-bottom: 4px;
-        }
-
-        /* 二级菜单专属醒目对比样式 */
-        .sub-nav-card {
-            background: linear-gradient(135deg, rgba(192, 132, 252, 0.12), rgba(124, 58, 237, 0.18));
-            border: 1px dashed rgba(192, 132, 252, 0.4);
-            border-left: 3px solid #c084fc;
-            padding: 10px 18px 10px 24px;
-            border-radius: 10px;
-            font-size: 0.88rem;
-            color: #e9d5ff;
-            width: fit-content;
-        }
-
-        .sub-nav-card:hover {
-            background: linear-gradient(135deg, rgba(192, 132, 252, 0.22), rgba(124, 58, 237, 0.28));
-            border-color: #c084fc;
-            box-shadow: 0 4px 15px rgba(192, 132, 252, 0.3);
+            transform: translateY(18px);
         }
 
         /* 页脚 */
@@ -391,9 +423,7 @@
 
         /* ------------------ 响应式移动端适配 ------------------ */
         @media (max-width: 640px) {
-            body {
-                padding: 20px 16px;
-            }
+            body { padding: 20px 16px; }
 
             .header {
                 flex-direction: row;
@@ -402,9 +432,7 @@
                 margin-bottom: 25px;
             }
 
-            .brand-logo {
-                font-size: 1.15rem;
-            }
+            .brand-logo { font-size: 1.15rem; }
 
             .time-slider-container {
                 padding: 4px 12px;
@@ -412,23 +440,10 @@
                 height: 30px;
             }
 
-            .time-label {
-                font-size: 0.65rem;
-                padding: 1px 4px;
-            }
-
-            .time-val {
-                font-size: 0.75rem;
-            }
-
-            .main-container {
-                padding: 10px 0;
-            }
-
-            h1.hero-title {
-                font-size: 1.8rem;
-                margin-bottom: 22px;
-            }
+            .time-label { font-size: 0.65rem; padding: 1px 4px; }
+            .time-val { font-size: 0.75rem; }
+            .main-container { padding: 10px 0; }
+            h1.hero-title { font-size: 1.8rem; margin-bottom: 20px; }
 
             .search-input {
                 padding: 14px 18px;
@@ -444,15 +459,20 @@
                 border-radius: 10px;
             }
 
+            .category-tabs-nav {
+                gap: 16px;
+                padding-bottom: 6px;
+            }
+
+            .category-tab-btn {
+                font-size: 0.88rem;
+            }
+
             .nav-card {
                 width: calc(50% - 6px);
                 justify-content: center;
                 padding: 12px 10px;
                 font-size: 0.85rem;
-            }
-
-            .sub-nav-card {
-                width: 100%;
             }
 
             .footer {
@@ -472,7 +492,6 @@
 
     <!-- 顶部栏 -->
     <header class="header">
-        <!-- 左上角标题点击返回主页 -->
         <a href="#" class="brand-logo">Peyser's Studio</a>
         
         <!-- 自动翻页交替展示 DE / CN 时间 -->
@@ -491,7 +510,7 @@
     <!-- 主体内容区域 -->
     <main class="main-container">
 
-        <!-- 根据时间判定问候语的标题 -->
+        <!-- 问候语标题 -->
         <h1 class="hero-title" id="greeting-title">你好，今天想做点什么？</h1>
 
         <!-- 延时顺滑出现的下方内容组 -->
@@ -510,66 +529,77 @@
                 </form>
             </div>
 
-            <!-- Studio Zone 类目（原 Bistro 已移至此处） -->
-            <div class="section-title">Studio Zone</div>
-            <div class="nav-links">
-                <!-- Bistro (Beta) -->
-                <a href="https://bistro.peyser.cn" class="nav-card" target="_blank">
-                    <span>🍷 Bistro (Beta)</span>
-                </a>
-                <!-- 邮箱 -->
-                <a href="https://qiye.163.com" class="nav-card" target="_blank">
-                    <span>📧 邮箱</span>
-                </a>
-                <!-- 播客（含展开箭头） -->
-                <div class="nav-card" id="podcast-parent-card" onclick="togglePodcastMenu(event)">
-                    <span>🎙️ 播客</span>
-                    <span class="arrow-icon">▼</span>
-                </div>
-                <!-- 文件（内部文件分享） -->
-                <a href="#" class="nav-card" target="_blank">
-                    <span>📁 文件</span>
-                </a>
+            <!-- 无框下划线高亮分类 Tab -->
+            <nav class="category-tabs-nav" id="tabs-nav">
+                <button class="category-tab-btn active" onclick="switchCategory('panel-common', this)">常用</button>
+                <button class="category-tab-btn" onclick="switchCategory('panel-studio', this)">Studio Zone</button>
+                <button class="category-tab-btn" onclick="switchCategory('panel-games', this)">🎮 游戏类</button>
+                <button class="category-tab-btn" onclick="switchCategory('panel-travel', this)">🚗 出行 & 通信</button>
+                <button class="category-tab-btn" onclick="switchCategory('panel-media', this)">🎬 音视频工具</button>
+                <button class="category-tab-btn" onclick="switchCategory('panel-aviation', this)">✈️ 航空类</button>
+                <!-- 炫酷发光下划线跟随条 -->
+                <div class="tab-indicator" id="tab-indicator"></div>
+            </nav>
 
-                <!-- 播客二级的子菜单列表（虚线边框+紫色高亮与一级拉开区别） -->
-                <div class="sub-nav-container" id="podcast-sub-menu">
-                    <a href="https://www.xiaoyuzhoufm.com/episode/6a226196b30e1571aea10be1?s=eyJ1IjoiNjZjMWI1YWJlZGNlNjcxMDRhZGZmZDY3In0%3D" class="nav-card sub-nav-card" target="_blank">
-                        <span>🎙️ 下一站，没想好</span>
-                    </a>
+            <!-- 各分类内容面板区域 -->
+            <div class="tab-panel-container">
+                
+                <!-- 1. 常用 -->
+                <div class="tab-panel active" id="panel-common">
+                    <a href="https://chatgpt.com" class="nav-card" target="_blank"><span>🤖 ChatGPT</span></a>
+                    <a href="https://gemini.google.com" class="nav-card" target="_blank"><span>✨ Gemini</span></a>
+                    <a href="https://maps.google.com" class="nav-card" target="_blank"><span>🗺️ Google 地图</span></a>
+                    <a href="https://mail.proton.me" class="nav-card" target="_blank"><span>🔒 Proton Mail</span></a>
                 </div>
-            </div>
 
-            <!-- 实用工具 -->
-            <div class="section-title">实用工具</div>
-            <div class="nav-links">
-                <a href="https://gemini.google.com" class="nav-card" target="_blank">
-                    <span>✨ Gemini</span>
-                </a>
-                <a href="https://chatgpt.com" class="nav-card" target="_blank">
-                    <span>🤖 ChatGPT</span>
-                </a>
-                <a href="https://greenvideo.cc/" class="nav-card" target="_blank">
-                    <span>🎬 视频提取</span>
-                </a>
-                <a href="https://vocalremover.org/zh/" class="nav-card" target="_blank">
-                    <span>🎵 音频提取 / 伴奏分离</span>
-                </a>
-                <a href="https://www.flightradar24.com" class="nav-card" target="_blank">
-                    <span>✈️ Flightradar24</span>
-                </a>
-                <a href="https://mail.proton.me" class="nav-card" target="_blank">
-                    <span>🔒 Proton Mail</span>
-                </a>
-                <a href="https://www.17track.net/zh-cn" class="nav-card" target="_blank">
-                    <span>📦 国际查件 (17TRACK)</span>
-                </a>
+                <!-- 2. Studio Zone -->
+                <div class="tab-panel" id="panel-studio">
+                    <a href="https://bistro.peyser.cn" class="nav-card" target="_blank"><span>🍷 Bistro (Beta)</span></a>
+                    <a href="https://qiye.163.com" class="nav-card" target="_blank"><span>📧 邮箱</span></a>
+                    <a href="https://www.xiaoyuzhoufm.com/episode/6a226196b30e1571aea10be1?s=eyJ1IjoiNjZjMWI1YWJlZGNlNjcxMDRhZGZmZDY3In0%3D" class="nav-card" target="_blank"><span>🎙️ 播客（下一站，没想好）</span></a>
+                    <a href="#" class="nav-card" target="_blank"><span>📁 文件</span></a>
+                </div>
+
+                <!-- 3. 游戏类 -->
+                <div class="tab-panel" id="panel-games">
+                    <div class="sub-nav-group-title">🚛 TruckersMP (TMP)</div>
+                    <a href="https://truckersmp.com" class="nav-card" target="_blank"><span>TMP 主页</span></a>
+                    <a href="https://truckersmp.com/reports/create" class="nav-card" target="_blank"><span>TMP 检举</span></a>
+                    <a href="https://map.truckersmp.com/" class="nav-card" target="_blank"><span>TMP 地图</span></a>
+                    <a href="https://traffic.krashnz.com/" class="nav-card" target="_blank"><span>TMP 流量</span></a>
+                </div>
+
+                <!-- 4. 出行 & 通信 -->
+                <div class="tab-panel" id="panel-travel">
+                    <a href="https://opensignal.com" class="nav-card" target="_blank"><span>📶 OpenSignal</span></a>
+                    <a href="https://www.spectrum-tracker.com/" class="nav-card" target="_blank"><span>📡 Spectrum</span></a>
+                    <a href="https://www.cellmapper.net/map" class="nav-card" target="_blank"><span>🗺️ CellMapper</span></a>
+                </div>
+
+                <!-- 5. 音视频工具 -->
+                <div class="tab-panel" id="panel-media">
+                    <a href="https://greenvideo.cc/" class="nav-card" target="_blank"><span>🎬 视频提取</span></a>
+                    <a href="https://vocalremover.org/zh/" class="nav-card" target="_blank"><span>🎵 伴奏分离</span></a>
+                </div>
+
+                <!-- 6. 航空类 -->
+                <div class="tab-panel" id="panel-aviation">
+                    <a href="https://www.flightradar24.com" class="nav-card" target="_blank"><span>✈️ FR24</span></a>
+                    <a href="https://map.variflight.com/" class="nav-card" target="_blank"><span>🛩️ 飞常准</span></a>
+                    <a href="https://www.skyscanner.net/" class="nav-card" target="_blank"><span>🌐 Skyscanner</span></a>
+                    <a href="https://matrix.itasoftware.com/search" class="nav-card" target="_blank"><span>📊 ITA Matrix</span></a>
+                    <a href="https://www.azair.cz/" class="nav-card" target="_blank"><span>✈️ Azair</span></a>
+                    <a href="https://www.airfleets.net/home/" class="nav-card" target="_blank"><span>🛈 Airfleets</span></a>
+                    <a href="https://www.expertflyer.com/" class="nav-card" target="_blank"><span>🎫 ExpertFlyer</span></a>
+                </div>
+
             </div>
 
             <!-- 页脚 -->
             <footer class="footer">
                 <div class="footer-left">
                     <div>有事找我？发个电邮：<a class="email-link" href="mailto:info@peyser.cn">info@peyser.cn</a></div>
-                    <span class="version-badge">V1.0.1</span>
+                    <span class="version-badge">V1.0.2</span>
                 </div>
                 <div class="copyright">
                     © <span id="copyright-year"></span> Peyser's Studio. All rights reserved.
@@ -597,6 +627,39 @@
                 input.name = 'wd';
                 tabBaidu.classList.add('active');
                 tabGoogle.classList.remove('active');
+            }
+        }
+
+        // 动态移动下划线跟随逻辑
+        function updateIndicator(btnEl) {
+            const indicator = document.getElementById('tab-indicator');
+            if (btnEl && indicator) {
+                indicator.style.width = `${btnEl.offsetWidth}px`;
+                indicator.style.left = `${btnEl.offsetLeft}px`;
+            }
+        }
+
+        // 分类 Tab 切换逻辑（带波浪阶梯动画）
+        function switchCategory(panelId, btnEl) {
+            // 切换按钮状态
+            document.querySelectorAll('.category-tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnEl.classList.add('active');
+            updateIndicator(btnEl);
+
+            // 切换面板
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+
+            const targetPanel = document.getElementById(panelId);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+                
+                // 给面板内部子元素注入渐进延迟（Stagger Effect）
+                const children = targetPanel.querySelectorAll('.nav-card, .sub-nav-group-title');
+                children.forEach((child, index) => {
+                    child.style.animationDelay = `${index * 0.05}s`;
+                });
             }
         }
 
@@ -633,7 +696,7 @@
             document.getElementById('time-cn').innerText = formatterCN.format(now).replace(/\//g, '.');
         }
 
-        // 时间轮播逻辑 (每 3 秒交替上翻切换 DE / CN)
+        // 时间轮播逻辑
         let currentBadgeIndex = 0;
         function switchTimeBadge() {
             const badgeDE = document.getElementById('badge-de');
@@ -662,45 +725,43 @@
             }, 600);
         }
 
-        // 播客菜单二次展开/收起切换
-        function togglePodcastMenu(event) {
-            event.stopPropagation();
-            const parentCard = document.getElementById('podcast-parent-card');
-            const subMenu = document.getElementById('podcast-sub-menu');
-            parentCard.classList.toggle('active');
-            subMenu.classList.toggle('open');
-        }
-
-        // 根据本机当前时间动态设置问候语
+        // 动态问候语
         function updateGreeting() {
             const hour = new Date().getHours();
             let timeText = '你好';
 
-            if (hour >= 0 && hour < 6) {
-                timeText = '深夜了';
-            } else if (hour >= 6 && hour < 11) {
-                timeText = '早上好';
-            } else if (hour >= 11 && hour < 13) {
-                timeText = '中午好';
-            } else if (hour >= 13 && hour < 18) {
-                timeText = '下午好';
-            } else {
-                timeText = '晚上好';
-            }
+            if (hour >= 0 && hour < 6) timeText = '深夜了';
+            else if (hour >= 6 && hour < 11) timeText = '早上好';
+            else if (hour >= 11 && hour < 13) timeText = '中午好';
+            else if (hour >= 13 && hour < 18) timeText = '下午好';
+            else timeText = '晚上好';
 
             document.getElementById('greeting-title').innerText = `${timeText}，今天想做点什么？`;
         }
 
-        // 动态更新年份
+        // 初始化
+        window.addEventListener('load', () => {
+            updateGreeting();
+            updateTime();
+            setInterval(updateTime, 1000);
+            setInterval(switchTimeBadge, 3000);
+            
+            // 初始化指示器位置
+            const activeBtn = document.querySelector('.category-tab-btn.active');
+            updateIndicator(activeBtn);
+            
+            // 触发默认面板卡片的阶梯动画
+            switchCategory('panel-common', activeBtn);
+        });
+
+        // 窗口尺寸改变时重置指示器位置
+        window.addEventListener('resize', () => {
+            const activeBtn = document.querySelector('.category-tab-btn.active');
+            updateIndicator(activeBtn);
+        });
+
+        // 动态年份
         document.getElementById('copyright-year').innerText = new Date().getFullYear();
-
-        // 页面初始化执行
-        updateGreeting();
-        updateTime();
-
-        // 1秒刷新一次时间，3秒翻页一次
-        setInterval(updateTime, 1000);
-        setInterval(switchTimeBadge, 3000);
     </script>
 </body>
 </html>
