@@ -4,24 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peyser's Studio</title>
+    <!-- 引入适合时间显示的科技感等宽字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
     <!-- 网站 Favicon 图标 -->
     <link rel="icon" href="https://api.iconify.design/heroicons:sparkles-20-solid.svg?color=%23c084fc" type="image/svg+xml">
     <style>
+        /* ------------------ 主题变量 ------------------ */
+        :root {
+            /* 暗色模式变量（默认深紫微醺） */
+            --bg-gradient: linear-gradient(-45deg, #0d0614, #1a0826, #2d0c3f, #150921, #0a0410);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.55);
+            --text-muted: rgba(255, 255, 255, 0.35);
+            --accent-color: #c084fc;
+            --accent-glow: rgba(192, 132, 252, 0.4);
+            
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover-bg: rgba(255, 255, 255, 0.1);
+            --card-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            
+            --input-bg: rgba(255, 255, 255, 0.06);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --glass-blur: blur(20px);
+            
+            --title-gradient: linear-gradient(135deg, #ffffff 0%, #e9d5ff 40%, #c084fc 100%);
+            --sub-title-color: #c084fc;
+            --time-val-color: rgba(255, 255, 255, 0.95);
+            --footer-border: rgba(255, 255, 255, 0.08);
+        }
+
+        /* 银色炫彩亮色模式 */
+        body.light-mode {
+            --bg-gradient: linear-gradient(-45deg, #e2e8f0, #eef2ff, #f3e8ff, #e0f2fe, #cbd5e1);
+            --text-primary: #0f172a;
+            --text-secondary: rgba(15, 23, 42, 0.65);
+            --text-muted: rgba(15, 23, 42, 0.45);
+            --accent-color: #9333ea;
+            --accent-glow: rgba(147, 51, 234, 0.3);
+            
+            --card-bg: rgba(255, 255, 255, 0.65);
+            --card-border: rgba(255, 255, 255, 0.9);
+            --card-hover-bg: rgba(255, 255, 255, 0.9);
+            --card-shadow: 0 8px 24px rgba(147, 51, 234, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+            
+            --input-bg: rgba(255, 255, 255, 0.7);
+            --input-border: rgba(203, 213, 225, 0.8);
+            
+            --title-gradient: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #7e22ce 100%);
+            --sub-title-color: #7e22ce;
+            --time-val-color: #1e1b4b;
+            --footer-border: rgba(0, 0, 0, 0.08);
+        }
+
         /* 全局基础重置 */
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: all 0.25s ease; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* 奢华深紫微醺流光色彩渐变背景 */
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif; 
-            background: linear-gradient(-45deg, #0d0614, #1a0826, #2d0c3f, #150921, #0a0410);
+            background: var(--bg-gradient);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             min-height: 100vh; 
             display: flex; 
             flex-direction: column;
-            color: #fff; 
+            color: var(--text-primary); 
             overflow-x: hidden;
             padding: 30px 20px;
+            transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes gradientBG {
@@ -40,81 +94,123 @@
             align-items: center;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .brand-logo {
             font-size: 1.3rem;
             font-weight: 800;
             letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #ffffff 0%, #c084fc 100%);
+            background: var(--title-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             white-space: nowrap;
             text-decoration: none;
             cursor: pointer;
+            transition: opacity 0.3s ease;
         }
 
-        .brand-logo:hover {
-            opacity: 0.85;
+        .brand-logo:hover { opacity: 0.85; }
+
+        /* 主题切换按钮 */
+        .theme-toggle-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            box-shadow: var(--card-shadow);
+            font-size: 1.1rem;
+            user-select: none;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        background 0.5s ease, 
+                        border-color 0.5s ease;
         }
 
-        /* 轮播时钟容器 */
+        .theme-toggle-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+            border-color: var(--accent-color);
+        }
+
+        .theme-toggle-btn:active {
+            transform: scale(0.95) rotate(-30deg);
+        }
+
+        /* 轮播时钟容器（向左翻页） */
         .time-slider-container {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 6px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 6px 18px;
             border-radius: 30px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            height: 34px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            box-shadow: var(--card-shadow);
+            height: 38px;
             overflow: hidden;
             position: relative;
-            min-width: 200px;
+            min-width: 230px;
+            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
         }
 
         .time-badge {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             opacity: 0;
-            transform: translateY(100%);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+            /* 默认在右侧准备进入 */
+            transform: translateX(100%);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
             pointer-events: none;
         }
 
         .time-badge.active {
             opacity: 1;
-            transform: translateY(0);
+            /* 处于显示位置 */
+            transform: translateX(0);
             pointer-events: auto;
         }
 
         .time-badge.exit {
             opacity: 0;
-            transform: translateY(-100%);
+            /* 向左滑动移出 */
+            transform: translateX(-100%);
         }
 
         .time-label {
             font-size: 0.72rem;
             font-weight: 700;
-            color: #c084fc;
+            color: var(--accent-color);
             letter-spacing: 0.5px;
-            background: rgba(192, 132, 252, 0.12);
-            padding: 2px 6px;
+            background: rgba(147, 51, 234, 0.12);
+            padding: 2px 7px;
             border-radius: 6px;
+            transition: color 0.5s ease, background 0.5s ease;
         }
 
         .time-val {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Mono", "Roboto Mono", "Segoe UI Mono", monospace;
-            font-size: 0.82rem;
-            font-weight: 500;
-            letter-spacing: -0.2px;
-            color: rgba(255, 255, 255, 0.9);
+            font-family: 'JetBrains Mono', "SF Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--time-val-color);
             font-variant-numeric: tabular-nums;
+            transition: color 0.5s ease;
         }
 
         /* ------------------ 主体容器 & 顺序进场动画 ------------------ */
@@ -135,20 +231,17 @@
             line-height: 1.25;
             letter-spacing: -0.5px;
             margin-bottom: 25px;
-            background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 40%, #c084fc 100%);
+            background: var(--title-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             opacity: 0;
             transform: translateY(20px);
             animation: heroTitleIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+            transition: background 0.5s ease;
         }
 
         @keyframes heroTitleIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .animate-content {
@@ -158,16 +251,11 @@
         }
 
         @keyframes contentFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ------------------ 搜索框组件 ------------------ */
-        .search-section {
-            margin-bottom: 30px;
-        }
+        .search-section { margin-bottom: 30px; }
 
         .engine-tabs {
             display: flex;
@@ -179,17 +267,16 @@
         .engine-tab {
             background: transparent;
             border: none;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-secondary);
             font-size: 0.9rem;
             font-weight: 600;
             padding: 4px 0;
             cursor: pointer;
             position: relative;
+            transition: color 0.3s ease;
         }
 
-        .engine-tab.active {
-            color: #c084fc;
-        }
+        .engine-tab.active { color: var(--accent-color); }
 
         .engine-tab.active::after {
             content: '';
@@ -198,9 +285,10 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: #c084fc;
+            background: var(--accent-color);
             border-radius: 2px;
-            box-shadow: 0 0 8px #c084fc;
+            box-shadow: 0 0 8px var(--accent-color);
+            transition: background 0.5s ease, box-shadow 0.5s ease;
         }
 
         .search-box {
@@ -214,20 +302,20 @@
             padding: 16px 22px;
             padding-right: 60px;
             font-size: 1.05rem;
-            color: #fff;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-primary);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 18px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             outline: none;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            box-shadow: var(--card-shadow);
+            transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.3s ease;
         }
 
         .search-input:focus {
-            border-color: rgba(192, 132, 252, 0.5);
-            background: rgba(255, 255, 255, 0.09);
-            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.25);
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 32px var(--accent-glow);
         }
 
         .search-btn {
@@ -244,11 +332,10 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+            transition: transform 0.25s ease;
         }
 
-        .search-btn:hover {
-            transform: scale(1.05);
-        }
+        .search-btn:hover { transform: scale(1.05); }
 
         /* ------------------ 无外框下划线高亮导航 Tab ------------------ */
         .category-tabs-nav {
@@ -257,21 +344,20 @@
             align-items: center;
             gap: 24px;
             margin-bottom: 25px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid var(--footer-border);
             padding-bottom: 8px;
             overflow-x: auto;
             white-space: nowrap;
             scrollbar-width: none;
+            transition: border-color 0.5s ease;
         }
 
-        .category-tabs-nav::-webkit-scrollbar {
-            display: none;
-        }
+        .category-tabs-nav::-webkit-scrollbar { display: none; }
 
         .category-tab-btn {
             background: transparent;
             border: none;
-            color: rgba(255, 255, 255, 0.55);
+            color: var(--text-secondary);
             padding: 8px 2px;
             font-size: 0.95rem;
             font-weight: 600;
@@ -281,14 +367,11 @@
             transition: color 0.3s ease;
         }
 
-        .category-tab-btn:hover {
-            color: rgba(255, 255, 255, 0.9);
-        }
+        .category-tab-btn:hover { color: var(--text-primary); }
 
         .category-tab-btn.active {
-            color: #ffffff;
+            color: var(--text-primary);
             font-weight: 700;
-            text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
         }
 
         /* 动态发光跟随下划线 */
@@ -299,8 +382,8 @@
             height: 3px;
             background: linear-gradient(90deg, #c084fc, #a855f7);
             border-radius: 3px;
-            box-shadow: 0 0 12px #c084fc, 0 0 4px #a855f7;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 12px var(--accent-color);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), width 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
             pointer-events: none;
         }
 
@@ -316,9 +399,7 @@
             gap: 12px;
         }
 
-        .tab-panel.active {
-            display: flex;
-        }
+        .tab-panel.active { display: flex; }
 
         /* 网址卡片样式 */
         .nav-card {
@@ -326,60 +407,68 @@
             align-items: center;
             gap: 8px;
             padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 14px;
-            color: #fff;
+            color: var(--text-primary);
             text-decoration: none;
             font-size: 0.92rem;
             font-weight: 500;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            box-shadow: var(--card-shadow);
             cursor: pointer;
-            
-            /* 阶梯动画初始状态 */
             opacity: 0;
             transform: translateY(18px) scale(0.96);
-            transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            transition: transform 0.25s ease, background 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
         }
 
-        /* 当 Tab 激活时触发子元素的阶梯式顺滑淡入 */
         .tab-panel.active .nav-card,
         .tab-panel.active .sub-nav-group-title {
             animation: cardWaveIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes cardWaveIn {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .nav-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(192, 132, 252, 0.5);
+            background: var(--card-hover-bg);
+            border-color: var(--accent-color);
             transform: translateY(-3px) scale(1.02) !important;
-            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+            box-shadow: 0 10px 25px var(--accent-glow);
         }
 
         .sub-nav-group-title {
             width: 100%;
-            font-size: 0.8rem;
-            color: #c084fc;
+            font-size: 0.82rem;
+            color: var(--sub-title-color);
             font-weight: 700;
+            margin-top: 8px;
             margin-bottom: 2px;
             padding-left: 2px;
             opacity: 0;
             transform: translateY(18px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.5s ease;
+        }
+
+        .sub-nav-group-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--footer-border);
+            margin-left: 6px;
+            transition: background 0.5s ease;
         }
 
         /* 页脚 */
         .footer {
             font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.45);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            border-top: 1px solid var(--footer-border);
             padding-top: 22px;
             margin-top: auto;
             display: flex;
@@ -387,6 +476,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
+            transition: border-color 0.5s ease, color 0.5s ease;
         }
 
         .footer-left {
@@ -397,51 +487,45 @@
         }
 
         .email-link {
-            color: rgba(255, 255, 255, 0.85);
+            color: var(--text-primary);
             text-decoration: none;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+            border-bottom: 1px dashed var(--text-secondary);
+            transition: color 0.3s ease, border-color 0.3s ease;
         }
 
         .email-link:hover {
-            color: #c084fc;
-            border-bottom-color: #c084fc;
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
         }
 
-        .copyright {
-            color: rgba(255, 255, 255, 0.35);
-        }
+        .copyright { color: var(--text-muted); transition: color 0.5s ease; }
 
         .version-badge {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             padding: 2px 8px;
             border-radius: 8px;
             font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-secondary);
             font-family: monospace;
+            transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease;
         }
 
         /* ------------------ 响应式移动端适配 ------------------ */
         @media (max-width: 640px) {
             body { padding: 20px 16px; }
 
-            .header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 25px;
-            }
-
+            .header { margin-bottom: 25px; }
             .brand-logo { font-size: 1.15rem; }
 
             .time-slider-container {
                 padding: 4px 12px;
-                min-width: 170px;
-                height: 30px;
+                min-width: 180px;
+                height: 34px;
             }
 
             .time-label { font-size: 0.65rem; padding: 1px 4px; }
-            .time-val { font-size: 0.75rem; }
+            .time-val { font-size: 0.76rem; }
             .main-container { padding: 10px 0; }
             h1.hero-title { font-size: 1.8rem; margin-bottom: 20px; }
 
@@ -459,14 +543,8 @@
                 border-radius: 10px;
             }
 
-            .category-tabs-nav {
-                gap: 16px;
-                padding-bottom: 6px;
-            }
-
-            .category-tab-btn {
-                font-size: 0.88rem;
-            }
+            .category-tabs-nav { gap: 16px; padding-bottom: 6px; }
+            .category-tab-btn { font-size: 0.88rem; }
 
             .nav-card {
                 width: calc(50% - 6px);
@@ -475,16 +553,8 @@
                 font-size: 0.85rem;
             }
 
-            .footer {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .footer-left {
-                width: 100%;
-                justify-content: space-between;
-            }
+            .footer { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .footer-left { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
@@ -494,15 +564,20 @@
     <header class="header">
         <a href="#" class="brand-logo">Peyser's Studio</a>
         
-        <!-- 自动翻页交替展示 DE / CN 时间 -->
-        <div class="time-slider-container">
-            <div class="time-badge active" id="badge-de">
-                <span class="time-label">DE</span>
-                <span class="time-val" id="time-de">--.--.-- --:--:--</span>
-            </div>
-            <div class="time-badge" id="badge-cn">
-                <span class="time-label">CN</span>
-                <span class="time-val" id="time-cn">--.--.-- --:--:--</span>
+        <div class="header-right">
+            <!-- 手动切换主题按钮 -->
+            <button class="theme-toggle-btn" id="theme-toggle-btn" title="点击切换亮色 / 暗色模式">☀️</button>
+
+            <!-- 向左翻页展示 DE / CN 时间 -->
+            <div class="time-slider-container">
+                <div class="time-badge active" id="badge-de">
+                    <span class="time-label">DE</span>
+                    <span class="time-val" id="time-de">--:--:--</span>
+                </div>
+                <div class="time-badge" id="badge-cn">
+                    <span class="time-label">CN</span>
+                    <span class="time-val" id="time-cn">--:--:--</span>
+                </div>
             </div>
         </div>
     </header>
@@ -546,15 +621,16 @@
                 
                 <!-- 1. 常用 -->
                 <div class="tab-panel active" id="panel-common">
-                    <a href="https://efa.vrr.de/niadreiplus/departureMonitor/?branding=niag&lng=de" class="nav-card" target="_blank"><span>🚌 NIAG 查询</span></a>
-                    <a href="https://www.bahnhof.de/" class="nav-card" target="_blank"><span>🚉 DB SEV 位置查询</span></a>
-                    <a href="https://www.zuginfo.nrw/" class="nav-card" target="_blank"><span>🚄 NRW Zuginfo</span></a>
-                    <a href="https://chatgpt.com" class="nav-card" target="_blank"><span>🤖 ChatGPT</span></a>
+                    <div class="sub-nav-group-title">🌐 常用服务</div>
+                    <a href="https://mail.google.com" class="nav-card" target="_blank"><span>✉️ Gmail</span></a>
                     <a href="https://gemini.google.com" class="nav-card" target="_blank"><span>✨ Gemini</span></a>
                     <a href="https://maps.google.com" class="nav-card" target="_blank"><span>🗺️ Google 地图</span></a>
                     <a href="https://mail.proton.me" class="nav-card" target="_blank"><span>🔒 Proton Mail</span></a>
-                    
 
+                    <div class="sub-nav-group-title">🚆 德国交通查询</div>
+                    <a href="https://efa.vrr.de/niadreiplus/departureMonitor/?branding=niag&lng=de" class="nav-card" target="_blank"><span>🚌 NIAG 查询</span></a>
+                    <a href="https://www.bahnhof.de/" class="nav-card" target="_blank"><span>🚉 DB SEV 位置查询</span></a>
+                    <a href="https://www.zuginfo.nrw/" class="nav-card" target="_blank"><span>🚄 NRW Zuginfo</span></a>
                 </div>
 
                 <!-- 2. Studio Zone -->
@@ -606,7 +682,7 @@
             <footer class="footer">
                 <div class="footer-left">
                     <div>有事找我？发个电邮：<a class="email-link" href="mailto:info@peyser.cn">info@peyser.cn</a></div>
-                    <span class="version-badge">V1.0.3.2</span>
+                    <span class="version-badge">V1.0.4.2</span>
                 </div>
                 <div class="copyright">
                     © <span id="copyright-year"></span> Peyser's Studio. All rights reserved.
@@ -617,6 +693,38 @@
 
     <!-- 交互脚本 -->
     <script>
+        // ------------------ 主题管理逻辑（自动+点击自由切换） ------------------
+        let manualTheme = null; // null: 自动判断, 'dark': 暗色, 'light': 亮色
+
+        function applyTheme() {
+            const hour = new Date().getHours();
+            // 默认判断：7:00 ~ 19:00 亮色模式，19:00 ~ 次日 7:00 暗色模式
+            const isDaytime = hour >= 7 && hour < 19;
+            const toggleBtn = document.getElementById('theme-toggle-btn');
+
+            let currentTheme = manualTheme;
+            if (!currentTheme) {
+                currentTheme = isDaytime ? 'light' : 'dark';
+            }
+
+            if (currentTheme === 'light') {
+                document.body.classList.add('light-mode');
+                toggleBtn.innerText = '☀️'; // 亮色模式图标
+                toggleBtn.title = '亮色模式（点击切换暗色模式）';
+            } else {
+                document.body.classList.remove('light-mode');
+                toggleBtn.innerText = '🌙'; // 暗色模式图标
+                toggleBtn.title = '暗色模式（点击切换亮色模式）';
+            }
+        }
+
+        // 手动点击直接在亮色/暗色间切换
+        document.getElementById('theme-toggle-btn').addEventListener('click', () => {
+            const isCurrentlyLight = document.body.classList.contains('light-mode');
+            manualTheme = isCurrentlyLight ? 'dark' : 'light';
+            applyTheme();
+        });
+
         // 搜索引擎切换逻辑
         function setEngine(engine) {
             const form = document.getElementById('search-form');
@@ -646,14 +754,12 @@
             }
         }
 
-        // 分类 Tab 切换逻辑（带波浪阶梯动画）
+        // 分类 Tab 切换逻辑
         function switchCategory(panelId, btnEl) {
-            // 切换按钮状态
             document.querySelectorAll('.category-tab-btn').forEach(btn => btn.classList.remove('active'));
             btnEl.classList.add('active');
             updateIndicator(btnEl);
 
-            // 切换面板
             document.querySelectorAll('.tab-panel').forEach(panel => {
                 panel.classList.remove('active');
             });
@@ -661,11 +767,9 @@
             const targetPanel = document.getElementById(panelId);
             if (targetPanel) {
                 targetPanel.classList.add('active');
-                
-                // 给面板内部子元素注入渐进延迟（Stagger Effect）
                 const children = targetPanel.querySelectorAll('.nav-card, .sub-nav-group-title');
                 children.forEach((child, index) => {
-                    child.style.animationDelay = `${index * 0.05}s`;
+                    child.style.animationDelay = `${index * 0.04}s`;
                 });
             }
         }
@@ -676,7 +780,7 @@
 
             const optionsDE = {
                 timeZone: 'Europe/Berlin',
-                year: '2-digit',
+                year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
                 hour: '2-digit',
@@ -687,7 +791,7 @@
 
             const optionsCN = {
                 timeZone: 'Asia/Shanghai',
-                year: '2-digit',
+                year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
                 hour: '2-digit',
@@ -699,11 +803,22 @@
             const formatterDE = new Intl.DateTimeFormat('zh-CN', optionsDE);
             const formatterCN = new Intl.DateTimeFormat('zh-CN', optionsCN);
 
-            document.getElementById('time-de').innerText = formatterDE.format(now).replace(/\//g, '.');
-            document.getElementById('time-cn').innerText = formatterCN.format(now).replace(/\//g, '.');
+            const formatTimeStr = (formatter) => {
+                const parts = formatter.formatToParts(now);
+                const map = {};
+                parts.forEach(p => map[p.type] = p.value);
+                return `${map.year}-${map.month}-${map.day} ${map.hour}:${map.minute}:${map.second}`;
+            };
+
+            document.getElementById('time-de').innerText = formatTimeStr(formatterDE);
+            document.getElementById('time-cn').innerText = formatTimeStr(formatterCN);
+
+            if (now.getMinutes() === 0 && now.getSeconds() === 0 && manualTheme === null) {
+                applyTheme();
+            }
         }
 
-        // 时间轮播逻辑
+        // 向左滑动时间轮播逻辑
         let currentBadgeIndex = 0;
         function switchTimeBadge() {
             const badgeDE = document.getElementById('badge-de');
@@ -723,6 +838,7 @@
                 currentBadgeIndex = 0;
             }
 
+            // 动画结束后移除 exit 状态，重置回右侧准备下一次滑动
             setTimeout(() => {
                 if (currentBadgeIndex === 0) {
                     badgeCN.classList.remove('exit');
@@ -748,26 +864,22 @@
 
         // 初始化
         window.addEventListener('load', () => {
+            applyTheme();
             updateGreeting();
             updateTime();
             setInterval(updateTime, 1000);
-            setInterval(switchTimeBadge, 3000);
+            setInterval(switchTimeBadge, 3500);
             
-            // 初始化指示器位置
             const activeBtn = document.querySelector('.category-tab-btn.active');
             updateIndicator(activeBtn);
-            
-            // 触发默认面板卡片的阶梯动画
             switchCategory('panel-common', activeBtn);
         });
 
-        // 窗口尺寸改变时重置指示器位置
         window.addEventListener('resize', () => {
             const activeBtn = document.querySelector('.category-tab-btn.active');
             updateIndicator(activeBtn);
         });
 
-        // 动态年份
         document.getElementById('copyright-year').innerText = new Date().getFullYear();
     </script>
 </body>
