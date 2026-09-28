@@ -35,6 +35,10 @@
             --sub-title-color: #c084fc;
             --time-val-color: rgba(255, 255, 255, 0.95);
             --footer-border: rgba(255, 255, 255, 0.08);
+
+            /* 弹窗专用变量 */
+            --modal-bg: rgba(21, 9, 33, 0.92);
+            --modal-content-bg: rgba(255, 255, 255, 0.04);
         }
 
         /* 银色炫彩亮色模式 */
@@ -58,6 +62,10 @@
             --sub-title-color: #7e22ce;
             --time-val-color: #1e1b4b;
             --footer-border: rgba(0, 0, 0, 0.08);
+
+            /* 亮色模式弹窗变量 */
+            --modal-bg: rgba(241, 245, 249, 0.92);
+            --modal-content-bg: rgba(255, 255, 255, 0.85);
         }
 
         /* 全局基础重置 */
@@ -173,7 +181,6 @@
             width: 100%;
             height: 100%;
             opacity: 0;
-            /* 默认在右侧准备进入 */
             transform: translateX(100%);
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
             pointer-events: none;
@@ -181,14 +188,12 @@
 
         .time-badge.active {
             opacity: 1;
-            /* 处于显示位置 */
             transform: translateX(0);
             pointer-events: auto;
         }
 
         .time-badge.exit {
             opacity: 0;
-            /* 向左滑动移出 */
             transform: translateX(-100%);
         }
 
@@ -374,7 +379,6 @@
             font-weight: 700;
         }
 
-        /* 动态发光跟随下划线 */
         .tab-indicator {
             position: absolute;
             bottom: -1px;
@@ -401,7 +405,6 @@
 
         .tab-panel.active { display: flex; }
 
-        /* 网址卡片样式 */
         .nav-card {
             display: inline-flex;
             align-items: center;
@@ -462,6 +465,145 @@
             background: var(--footer-border);
             margin-left: 6px;
             transition: background 0.5s ease;
+        }
+
+        /* ------------------ 文本框弹窗 (Modal) 样式 ------------------ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: var(--modal-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 650px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--footer-border);
+            padding-bottom: 12px;
+        }
+
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s ease;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            background: var(--modal-content-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            max-height: 65vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* 快捷指令列表样式 */
+        .cmd-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            gap: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .cmd-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .cmd-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: 0.88rem;
+            word-break: break-all;
+        }
+
+        .cmd-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .cmd-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .cmd-copy-btn {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .cmd-copy-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
         }
 
         /* 页脚 */
@@ -648,6 +790,11 @@
                     <a href="https://truckersmp.com/reports/create" class="nav-card" target="_blank"><span>检举</span></a>
                     <a href="https://map.truckersmp.com/" class="nav-card" target="_blank"><span>地图</span></a>
                     <a href="https://traffic.krashnz.com/" class="nav-card" target="_blank"><span>交通流量</span></a>
+                    
+                    <div class="sub-nav-group-title">🚛 欧洲卡车模拟2 (ETS2)</div>
+                    <!-- Euro Truck Simulator 2 选项卡（点击弹出指令面板） -->
+                    <div class="nav-card" onclick="openEtsModal()"><span>控制台指令</span></div>
+
                     <div class="sub-nav-group-title">💂 钢铁雄心4</div>
                     <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2160148704" class="nav-card" target="_blank"><span>控制台指令</span></a>
                 </div>
@@ -682,7 +829,7 @@
             <footer class="footer">
                 <div class="footer-left">
                     <div>有事找我？发个电邮：<a class="email-link" href="mailto:info@peyser.cn">info@peyser.cn</a></div>
-                    <span class="version-badge">V1.0.4</span>
+                    <span class="version-badge">V1.0.5</span>
                 </div>
                 <div class="copyright">
                     © <span id="copyright-year"></span> Peyser's Studio. All rights reserved.
@@ -691,14 +838,162 @@
         </div>
     </main>
 
+    <!-- ETS2 控制台指令弹窗 -->
+    <div class="modal-overlay" id="ets-modal" onclick="closeEtsModal(event)">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title">🚛 Euro Truck Simulator 2 常用指令</div>
+                <button class="modal-close-btn" onclick="closeEtsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">车头稳定性</span>
+                        <span class="cmd-code">g_truck_stability 1.0</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('g_truck_stability 1.0', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">货柜/挂车稳定性</span>
+                        <span class="cmd-code">g_trailer_stability 1.0</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('g_trailer_stability 1.0', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">悬挂硬度</span>
+                        <span class="cmd-code">g_suspension_stiffness 1.0</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('g_suspension_stiffness 1.0', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">飞行</span>
+                        <span class="cmd-code">主键盘数字 (0)</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('0', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">飞行控制</span>
+                        <span class="cmd-code">小键盘 8↑  4←  6→  2↓</span>
+                    </div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">飞行速度调整</span>
+                        <span class="cmd-code">g_flyspeed 100</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('g_flyspeed 100', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">快速前往 （goto 城市名）</span>
+                        <span class="cmd-code">goto berlin</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('goto berlin', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">AI车辆车流量控制 （1-10，0为关闭）</span>
+                        <span class="cmd-code">g_traffic 1</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('g_traffic 1', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">更改时间</span>
+                        <span class="cmd-code">g_set_time 08:30</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('g_set_time 08:30', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">更改天气 （下雨）</span>
+                        <span class="cmd-code">g_set_weather 1</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('g_set_weather 1', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">更改天气 （晴天）</span>
+                        <span class="cmd-code">g_set_weather 0</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('g_set_weather 0', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">改变游戏的时间流速</span>
+                        <span class="cmd-code">warp 2</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('warp 2', this)">复制</button>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-info">
+                        <span class="cmd-label">游戏中显示FPS等信息</span>
+                        <span class="cmd-code">g_minicon 1</span>
+                    </div>
+                    <button class="cmd-copy-btn" onclick="copyCmd('g_minicon 1', this)">复制</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <!-- 交互脚本 -->
     <script>
+        // ------------------ ETS2 弹窗及单条独立复制逻辑 ------------------
+        function openEtsModal() {
+            document.getElementById('ets-modal').classList.add('active');
+        }
+
+        function closeEtsModal(event) {
+            if (!event || event.target === document.getElementById('ets-modal') || event.target.classList.contains('modal-close-btn')) {
+                document.getElementById('ets-modal').classList.remove('active');
+            }
+        }
+
+        // 单独立复制指令函数
+        function copyCmd(text, btnEl) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btnEl.innerText;
+                btnEl.innerText = '已复制';
+                btnEl.style.background = '#22c55e'; // 变成绿色打勾感
+                setTimeout(() => {
+                    btnEl.innerText = originalText;
+                    btnEl.style.background = '';
+                }, 1500);
+            }).catch(err => {
+                alert('复制失败，请手动复制');
+            });
+        }
+
+        // 按 ESC 键关闭弹窗
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeEtsModal();
+            }
+        });
+
         // ------------------ 主题管理逻辑（自动+点击自由切换） ------------------
         let manualTheme = null; // null: 自动判断, 'dark': 暗色, 'light': 亮色
 
         function applyTheme() {
             const hour = new Date().getHours();
-            // 默认判断：7:00 ~ 19:00 亮色模式，19:00 ~ 次日 7:00 暗色模式
             const isDaytime = hour >= 7 && hour < 19;
             const toggleBtn = document.getElementById('theme-toggle-btn');
 
@@ -709,16 +1004,15 @@
 
             if (currentTheme === 'light') {
                 document.body.classList.add('light-mode');
-                toggleBtn.innerText = '☀️'; // 亮色模式图标
+                toggleBtn.innerText = '☀️';
                 toggleBtn.title = '亮色模式（点击切换暗色模式）';
             } else {
                 document.body.classList.remove('light-mode');
-                toggleBtn.innerText = '🌙'; // 暗色模式图标
+                toggleBtn.innerText = '🌙';
                 toggleBtn.title = '暗色模式（点击切换亮色模式）';
             }
         }
 
-        // 手动点击直接在亮色/暗色间切换
         document.getElementById('theme-toggle-btn').addEventListener('click', () => {
             const isCurrentlyLight = document.body.classList.contains('light-mode');
             manualTheme = isCurrentlyLight ? 'dark' : 'light';
@@ -838,7 +1132,6 @@
                 currentBadgeIndex = 0;
             }
 
-            // 动画结束后移除 exit 状态，重置回右侧准备下一次滑动
             setTimeout(() => {
                 if (currentBadgeIndex === 0) {
                     badgeCN.classList.remove('exit');
